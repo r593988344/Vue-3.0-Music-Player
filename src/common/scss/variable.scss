@@ -1,0 +1,16 @@
+// 统一整体规范
+// 红色背景颜色
+$background-r-color: #c3483c;
+// 小字号
+$font-size-sm: 12px;
+// 中字号
+$font-size-md: 16px;
+// 大字号
+$font-size-lg: 20px;
+.red-bc-color{
+  background-color: $background-r-color;
+}
+.m-header{
+  width: 100%;
+  height: 40px;
+}
