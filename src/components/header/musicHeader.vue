@@ -27,6 +27,8 @@ export default {
   top: 0;
   display: flex;
   align-items: center;
+  width: 100%;
+  height: 50px;
   form{
     display: flex;
     align-items: center;
@@ -38,7 +40,7 @@ export default {
       border-radius: 20px;
       font-size: 70%;
       width: 100%;
-      height: 50px;
+      height: 30px;
       display: inline-block;
       padding-left: 50px;
       background-color: #ca564c;
