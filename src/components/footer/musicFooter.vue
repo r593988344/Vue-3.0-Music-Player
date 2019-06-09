@@ -83,12 +83,12 @@ export default {
         align-items: center;
       }
       &.router-link-active{
-        background-color: #ca564c;
+        background-color: $background-r-color;
         .icon-tabs{
           color: #ffffff;
         }
         span{
-          color: #ce513f;
+          color: $background-r-color;
         }
       }
     }

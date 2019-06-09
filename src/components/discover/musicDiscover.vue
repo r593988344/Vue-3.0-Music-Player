@@ -66,36 +66,72 @@
       <div class="recommend-lists">
         <div class="playList">
           <div class="img-out">
+            <div class="play-number">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span>1.2亿</span>
+            </div>
             <img src="~common/image/playList1.jpg" alt="">
           </div>
           <p>来杯彩色汽水！论如何优雅的度过夏天</p>
         </div>
         <div class="playList">
           <div class="img-out">
+            <div class="play-number">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span>1.2亿</span>
+            </div>
             <img src="~common/image/playList1.jpg" alt="">
           </div>
           <p>来杯彩色汽水！论如何优雅的度过夏天</p>
         </div>
         <div class="playList">
           <div class="img-out">
+            <div class="play-number">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span>1.2亿</span>
+            </div>
             <img src="~common/image/playList1.jpg" alt="">
           </div>
           <p>来杯彩色汽水！论如何优雅的度过夏天</p>
         </div>
         <div class="playList">
           <div class="img-out">
+            <div class="play-number">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span>1.2亿</span>
+            </div>
             <img src="~common/image/playList1.jpg" alt="">
           </div>
           <p>来杯彩色汽水！论如何优雅的度过夏天</p>
         </div>
         <div class="playList">
           <div class="img-out">
+            <div class="play-number">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span>1.2亿</span>
+            </div>
             <img src="~common/image/playList1.jpg" alt="">
           </div>
           <p>来杯彩色汽水！论如何优雅的度过夏天</p>
         </div>
         <div class="playList">
           <div class="img-out">
+            <div class="play-number">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span>1.2亿</span>
+            </div>
             <img src="~common/image/playList1.jpg" alt="">
           </div>
           <p>来杯彩色汽水！论如何优雅的度过夏天</p>
@@ -203,8 +239,26 @@ export default {
         font-size: 12px;
         overflow: hidden;
         .img-out{
+          position: relative;
+          .play-number{
+            position: absolute;
+            color: #ffffff;
+            font-size: 16px;
+            height: auto;
+            width: auto;
+            right: 10px;
+            .icon{
+              vertical-align: middle;
+            }
+            span{
+              font-size: 10px;
+              margin-left: -5px;
+            }
+          }
           img{
             border-radius: 6px;
+            width: 100%;
+            height: 100%;
           }
         }
         p{
@@ -214,6 +268,7 @@ export default {
           overflow: hidden;
           margin-top: 5px;
           margin-bottom: 15px;
+          padding-right: 1px;
         }
       }
     }
