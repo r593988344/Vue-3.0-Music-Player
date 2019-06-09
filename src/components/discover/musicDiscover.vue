@@ -31,15 +31,15 @@ export default {
         initialSlide: 0,
         direction: 'horizontal',
         slidesPerView: 1,
-        mousewheel: true,
-        autoplay: true,
+        // mousewheel: true,
+        autoplay: {
+          disableOnInteraction: false
+        },
         loop: true,
-        disableOnInteraction: false,
         pagination: {
           el: '.swiper-pagination',
           clickable: true
-        },
-        init: true
+        }
       }
     }
   },

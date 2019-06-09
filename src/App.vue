@@ -2,7 +2,9 @@
   <div id="app">
     <music-header></music-header>
     <div class="router-view">
-      <router-view/>
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
     </div>
     <music-footer></music-footer>
   </div>

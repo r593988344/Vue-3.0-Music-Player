@@ -88,7 +88,6 @@ export default {
         background-color: #ca564c;
         .icon-tabs{
           color: #ffffff;
-          font-size: $font-size-lg;
         }
         span{
           color: #ce513f;
@@ -114,8 +113,8 @@ export default {
           font-size: 12px;
         }
         .icon-tabs{
-          font-size: 30px;
           color: #888888;
+          font-size: $font-size-lg;
         }
       }
     }
