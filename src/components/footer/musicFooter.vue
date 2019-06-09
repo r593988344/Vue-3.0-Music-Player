@@ -3,27 +3,27 @@
       <div class="tabs">
         <ul>
           <li>
-            <router-link tag="div" class="home-tabs" to="/recommend">
+            <router-link tag="div" class="home-tabs" to="/musicDiscover">
               <div class="red-bg">
                 <svg class="icon icon-tabs" aria-hidden="true">
                   <use xlink:href="#icon-faxian1"></use>
                 </svg>
               </div>
-              <span> 发现</span>
+              <span>发现</span>
             </router-link>
           </li>
           <li>
-            <router-link tag="div" class="home-tabs" to="/videos">
+            <router-link tag="div" class="home-tabs" to="/musicVideos">
               <div class="red-bg">
                 <svg class="icon icon-tabs" aria-hidden="true">
                   <use xlink:href="#icon-shipin"></use>
                 </svg>
               </div>
-              <span> 发现</span>
+              <span>视频</span>
             </router-link>
           </li>
           <li>
-            <router-link tag="div" class="home-tabs" to="/mine">
+            <router-link tag="div" class="home-tabs" to="/musicMine">
               <div class="red-bg">
                 <svg class="icon icon-tabs" aria-hidden="true">
                   <use xlink:href="#icon-yinyue"></use>
@@ -33,7 +33,7 @@
             </router-link>
           </li>
           <li>
-            <router-link tag="div" class="home-tabs" to="/friends">
+            <router-link tag="div" class="home-tabs" to="/musicFriends">
               <div class="red-bg">
                 <svg class="icon icon-tabs" aria-hidden="true">
                   <use xlink:href="#icon-pengyou"></use>
@@ -43,7 +43,7 @@
             </router-link>
           </li>
           <li>
-            <router-link tag="div" class="home-tabs" to="/account">
+            <router-link tag="div" class="home-tabs" to="/musicAccount">
               <div class="red-bg">
                 <svg class="icon icon-tabs" aria-hidden="true">
                   <use xlink:href="#icon-iconfuzhi"></use>
@@ -64,6 +64,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~common/scss/variable.scss";
 .music-footer{
   position: fixed;
   bottom: 0;
@@ -72,14 +73,13 @@ export default {
   .tabs{
     width: 100%;
     .home-tabs{
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       margin: 0 auto;
       border-radius: 50%;
-
       .red-bg{
-        height: 40px;
-        width: 40px;
+        height: 35px;
+        width: 35px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -88,6 +88,7 @@ export default {
         background-color: #ca564c;
         .icon-tabs{
           color: #ffffff;
+          font-size: $font-size-lg;
         }
         span{
           color: #ce513f;
@@ -104,7 +105,7 @@ export default {
         float: left;
         width: 60px;
         height: 60px;
-        font-size: 16px;
+        font-size: $font-size-md;
         display: flex;
         align-items: baseline;
         span{

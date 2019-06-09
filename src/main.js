@@ -11,7 +11,7 @@ import Vuex from 'vuex'
 import store from './store/store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-
+import 'swiper/dist/css/swiper.css'
 Vue.use(Vuex, axios, VueAxios)
 Vue.config.productionTip = false
 

@@ -23,12 +23,10 @@ export default {
 
 <style lang="scss" scoped>
 .m-header{
-  position: fixed;
-  top: 0;
   display: flex;
   align-items: center;
   width: 100%;
-  height: 50px;
+  height: 60px;
   form{
     display: flex;
     align-items: center;

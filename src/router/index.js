@@ -1,44 +1,42 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Recommend from '@/components/recommend/recommend'
-import Discover from '@/components/discover/discover'
-import Mine from '@/components/mine/mine'
-import Friends from '@/components/friends/friends'
-import Account from '@/components/account/account'
-import Videos from '@/components/videos/videos'
+import MusicDiscover from '@/components/discover/musicDiscover'
+import MusicMine from '@/components/mine/musicMine'
+import MusicFriends from '@/components/friends/musicFriends'
+import MusicAccount from '@/components/account/musicAccount'
+import MusicVideos from '@/components/videos/musicVideos'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'recommend',
-      component: Recommend
+      path: '*',
+      redirect: '/musicDiscover'
     },
     {
-      path: '/discover',
-      name: 'discover',
-      component: Discover
+      path: '/musicDiscover',
+      name: 'musicDiscover',
+      component: MusicDiscover
     },
     {
-      path: '/mine',
-      name: 'mine',
-      component: Mine
+      path: '/musicMine',
+      name: 'musicMine',
+      component: MusicMine
     },
     {
-      path: '/friends',
-      name: 'friends',
-      component: Friends
+      path: '/musicFriends',
+      name: 'musicFriends',
+      component: MusicFriends
     },
     {
-      path: '/account',
-      name: 'account',
-      component: Account
+      path: '/musicAccount',
+      name: 'musicAccount',
+      component: MusicAccount
     },
     {
-      path: '/videos',
-      name: 'videos',
-      component: Videos
+      path: '/musicVideos',
+      name: 'musicVideos',
+      component: MusicVideos
     }
   ]
 })

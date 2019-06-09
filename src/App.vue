@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <music-header></music-header>
-    <router-view/>
+    <div class="router-view">
+      <router-view/>
+    </div>
     <music-footer></music-footer>
   </div>
 </template>
@@ -25,5 +27,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.router-view{
+  height: calc(100% - 110px);
 }
 </style>
