@@ -29,8 +29,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  display:flex;
+  height:100%;
+  flex-direction:column;
 }
 .router-view{
-  height: calc(100% - 110px);
+  flex: 1;
+  width: 100%;
+  overflow-y: scroll;
+  height: auto;
 }
 </style>

@@ -66,8 +66,6 @@ export default {
 <style lang="scss" scoped>
 @import "~common/scss/variable.scss";
 .music-footer{
-  position: fixed;
-  bottom: 0;
   height: 60px;
   background-color: #ffffff;
   .tabs{
@@ -109,8 +107,9 @@ export default {
         align-items: baseline;
         span{
           display: block;
-          height: 10px;
-          font-size: 12px;
+          height:  24px;
+          line-height: 24px;
+          font-size: 10px;
         }
         .icon-tabs{
           color: #888888;
