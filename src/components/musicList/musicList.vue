@@ -24,6 +24,7 @@
 
 <script>
 import { getPersonalizedDetail } from 'common/api/discover'
+import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 export default {
   name: 'musicList',
@@ -34,7 +35,8 @@ export default {
       name: '',
       description: '',
       avatarUrl: '',
-      nickname: ''
+      nickname: '',
+      playCount: ''
     }
   },
   mounted () {
@@ -44,14 +46,17 @@ export default {
     _getPersonalizedDetail () {
       let id = this.$route.params.id
       getPersonalizedDetail(id).then(res => {
-        console.log(res.data.playlist)
+        console.log(res.data.result)
         if (res.data.code === ERR_OK) {
-          this.coverImgUrl = res.data.playlist.coverImgUrl
-          this.songLists = res.data.privileges
-          this.name = res.data.playlist.name
-          this.description = res.data.playlist.description
-          this.nickname = res.data.playlist.creator.nickname
-          this.avatarUrl = res.data.playlist.creator.avatarUrl
+          let playCount = res.data.result.playCount
+          this.coverImgUrl = res.data.result.coverImgUrl
+          this.songLists = res.data.result.tracks
+          this.name = res.data.result.name
+          this.description = res.data.result.description
+          this.nickname = res.data.result.creator.nickname
+          this.avatarUrl = res.data.result.creator.avatarUrl
+          this.playCount = playExchange(playCount)
+          console.log(this.playCount)
         }
       })
     }

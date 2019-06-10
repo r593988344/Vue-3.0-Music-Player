@@ -7,7 +7,7 @@
     <div class="swiper-area">
       <swiper :options="swiperOption" ref="mySwiper">
         <!-- slides -->
-        <swiper-slide v-for="(item, i) in banner" :key="i"><img :src="item.imageUrl" alt=""></swiper-slide>
+        <swiper-slide v-for="(item, i) in banner" :key="i"><img :src="item.picUrl" alt=""></swiper-slide>
         <!-- Optional controls -->
         <div class="swiper-pagination"  slot="pagination"></div>
       </swiper>
@@ -84,6 +84,7 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { getBanner, getPersonalized } from 'common/api/discover'
+import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 
 export default {
@@ -132,20 +133,13 @@ export default {
         if (res.data.code === ERR_OK) {
           let list = res.data.result
           list.forEach(item => {
-            let numStr = Math.floor(item.playCount).toString()
-            // 亿
-            if (numStr.length > 8) {
-              item.playCount = parseInt(numStr / 10000000) / 10 + '亿'
-            } else if (numStr.length > 3) {
-              item.playCount = parseInt(numStr / 10000) + '万'
-            }
+            item.playCount = playExchange(item.playCount)
           })
           this.personalized = list
         }
       })
     },
     songsList (id) {
-      console.log(id)
       this.$router.push(`/musicDiscover/${id}`)
     }
   }
