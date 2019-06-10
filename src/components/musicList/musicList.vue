@@ -5,7 +5,17 @@
       </div>
       <div>
         <div class="business-card">
-          <div></div>
+          <div class="image">
+            <img :src="coverImgUrl" alt="">
+            <div class="introduce">
+              <p class="title">{{name}}</p>
+              <div>
+                <img :src="avatarUrl" alt="">
+                <span>{{nickname}}</span>
+              </div>
+              <p class="description">{{description}}</p>
+            </div>
+          </div>
         </div>
         <div class="song-list"></div>
       </div>
@@ -13,8 +23,39 @@
 </template>
 
 <script>
+import { getPersonalizedDetail } from 'common/api/discover'
+import { ERR_OK } from 'common/js/config'
 export default {
-  name: 'musicList'
+  name: 'musicList',
+  data () {
+    return {
+      songLists: [],
+      coverImgUrl: '',
+      name: '',
+      description: '',
+      avatarUrl: '',
+      nickname: ''
+    }
+  },
+  mounted () {
+    this._getPersonalizedDetail()
+  },
+  methods: {
+    _getPersonalizedDetail () {
+      let id = this.$route.params.id
+      getPersonalizedDetail(id).then(res => {
+        console.log(res.data.playlist)
+        if (res.data.code === ERR_OK) {
+          this.coverImgUrl = res.data.playlist.coverImgUrl
+          this.songLists = res.data.privileges
+          this.name = res.data.playlist.name
+          this.description = res.data.playlist.description
+          this.nickname = res.data.playlist.creator.nickname
+          this.avatarUrl = res.data.playlist.creator.avatarUrl
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -30,6 +71,57 @@ export default {
     .back-to{
       height: 50px;
       line-height: 50px;
+    }
+    .business-card{
+      height: 200px;
+      margin-top: 16px;
+      img{
+        height: auto;
+        width: 40%;
+        float: left;
+        padding-left: 12px;
+      }
+      .introduce{
+        float: left;
+        width: 60%;
+        padding-left: 12px;
+        padding-right: 12px;
+        height: auto;
+        div{
+          height: 30px;
+        }
+        img{
+          width: 30px;
+          height: 30px;
+          padding: 0;
+          border-radius: 15px;
+          vertical-align: middle;
+        }
+        span{
+          font-size: 14px;
+          line-height: 30px;
+          float: left;
+          padding-left: 4px;
+        }
+        p{
+          font-size: 10px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          padding-right: 1px;
+          text-align: left;
+          margin-top: 5px;
+          margin-bottom: 10px;
+        }
+        .title{
+          font-size: 16px;
+          line-height: 20px;
+        }
+        .description{
+          line-height: 16px;
+        }
+      }
     }
   }
 </style>

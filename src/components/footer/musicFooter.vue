@@ -68,7 +68,6 @@ export default {
 .music-footer{
   height: 60px;
   background-color: #ffffff;
-  padding-top: 5px;
   .tabs{
     width: 100%;
     .home-tabs{

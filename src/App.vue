@@ -34,9 +34,10 @@ export default {
   flex-direction:column;
 }
 .router-view{
+  display: flex;
   flex: 1;
-  width: 100%;
   overflow-y: scroll;
-  height: auto;
+  height: 100%;
+  width: 100%;
 }
 </style>

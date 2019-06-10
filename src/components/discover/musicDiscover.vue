@@ -160,7 +160,7 @@ export default {
     width: 90%;
     margin-left: 50%;
     transform: translateX(-50%);
-    margin-top: -50px;
+    margin-top: -40px;
     img{
       border-radius: 10px;
       width: 100%;
@@ -175,10 +175,11 @@ export default {
     }
   }
   .top-red{
-    height: 50px;
+    height: 44px;
   }
   .guide-lists{
-    height: 100px;
+    height: 110px;
+    padding-top: 20px;
     border-bottom: 1px solid rgb(221, 221, 240);
     ul{
       display: flex;
