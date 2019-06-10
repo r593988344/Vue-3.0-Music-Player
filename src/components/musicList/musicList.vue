@@ -6,11 +6,19 @@
       <div>
         <div class="business-card">
           <div class="image">
-            <img :src="coverImgUrl" alt="">
+            <div class="image-left">
+              <img :src="coverImgUrl" alt="">
+              <div class="play-number">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-z"></use>
+                </svg>
+                <span>{{playCount}}</span>
+              </div>
+            </div>
             <div class="introduce">
               <p class="title">{{name}}</p>
               <div>
-                <img :src="avatarUrl" alt="">
+                <img class="sm-icon" :src="avatarUrl" alt="">
                 <span>{{nickname}}</span>
               </div>
               <p class="description">{{description}}</p>
@@ -80,11 +88,31 @@ export default {
     .business-card{
       height: 200px;
       margin-top: 16px;
-      img{
+      .image-left{
         height: auto;
         width: 40%;
         float: left;
         padding-left: 12px;
+        position: relative;
+      }
+      .play-number{
+        position: absolute;
+        color: #ffffff;
+        font-size: 16px;
+        height: auto;
+        width: auto;
+        right: 10px;
+        top: 0;
+        .icon{
+          vertical-align: middle;
+        }
+        span{
+          font-size: 10px;
+          margin-left: -5px;
+        }
+      }
+      img.sm-icon{
+        float: left;
       }
       .introduce{
         float: left;
