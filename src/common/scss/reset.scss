@@ -111,6 +111,11 @@ input[type=search]::-webkit-search-decoration {
   fill: currentColor;
   overflow: hidden;
 }
+.swiper-pagination-bullet{
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+}
 @media screen and (min-width:100px){ /*  iPhone 4,5 */
   html{ font-size: 10px;}
 }

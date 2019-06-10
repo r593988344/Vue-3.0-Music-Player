@@ -5,18 +5,24 @@ import MusicMine from '@/components/mine/musicMine'
 import MusicFriends from '@/components/friends/musicFriends'
 import MusicAccount from '@/components/account/musicAccount'
 import MusicVideos from '@/components/videos/musicVideos'
+import MusicList from '@/components/musicList/musicList'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '*',
+      path: '/',
       redirect: '/musicDiscover'
     },
     {
       path: '/musicDiscover',
-      name: 'musicDiscover',
-      component: MusicDiscover
+      component: MusicDiscover,
+      children: [
+        {
+          path: ':id',
+          component: MusicList
+        }
+      ]
     },
     {
       path: '/musicMine',

@@ -27,8 +27,6 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     "spaced-comment": 0,//注释风格要不要有空格什么的
     "space-unary-ops": [0, { "words": true, "nonwords": false }],//一元运算符的前/后要不要加空格
-    "space-before-function-paren": [2, "always"],//函数定义时括号前面要不要有空格
-    "space-before-blocks": [2, "always"],//不以新行开始的块{前面要不要有空格
     // "space-after-keywords": [2, "always"],//关键字后面是否要空一格
     "semi": [2, "never"],//语句强制分号结尾
     "quotes": [2, "single"],//引号类型 `` "" ''

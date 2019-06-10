@@ -7,10 +7,7 @@
     <div class="swiper-area">
       <swiper :options="swiperOption" ref="mySwiper">
         <!-- slides -->
-        <swiper-slide><img src="~common/image/swiper1.png" alt=""></swiper-slide>
-        <swiper-slide><img src="~common/image/swiper2.png" alt=""></swiper-slide>
-        <swiper-slide><img src="~common/image/swiper3.png" alt=""></swiper-slide>
-        <swiper-slide><img src="~common/image/swiper4.png" alt=""></swiper-slide>
+        <swiper-slide v-for="(item, i) in banner" :key="i"><img :src="item.imageUrl" alt=""></swiper-slide>
         <!-- Optional controls -->
         <div class="swiper-pagination"  slot="pagination"></div>
       </swiper>
@@ -64,86 +61,31 @@
     <div class="recommend">
       <h2>推荐歌单</h2>
       <div class="recommend-lists">
-        <div class="playList">
-          <div class="img-out">
+        <div class="playList" v-for="(item, index) of personalized" :key="index">
+          <div class="img-out" @click="songsList(item.id)">
             <div class="play-number">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
               </svg>
-              <span>1.2亿</span>
+              <span>{{item.playCount}}</span>
             </div>
-            <img src="~common/image/playList1.jpg" alt="">
+            <div class="gradients"></div>
+            <img v-lazy="item.picUrl" alt="">
           </div>
-          <p>来杯彩色汽水！论如何优雅的度过夏天</p>
-        </div>
-        <div class="playList">
-          <div class="img-out">
-            <div class="play-number">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
-              </svg>
-              <span>1.2亿</span>
-            </div>
-            <img src="~common/image/playList1.jpg" alt="">
-          </div>
-          <p>来杯彩色汽水！论如何优雅的度过夏天</p>
-        </div>
-        <div class="playList">
-          <div class="img-out">
-            <div class="play-number">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
-              </svg>
-              <span>1.2亿</span>
-            </div>
-            <img src="~common/image/playList1.jpg" alt="">
-          </div>
-          <p>来杯彩色汽水！论如何优雅的度过夏天</p>
-        </div>
-        <div class="playList">
-          <div class="img-out">
-            <div class="play-number">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
-              </svg>
-              <span>1.2亿</span>
-            </div>
-            <img src="~common/image/playList1.jpg" alt="">
-          </div>
-          <p>来杯彩色汽水！论如何优雅的度过夏天</p>
-        </div>
-        <div class="playList">
-          <div class="img-out">
-            <div class="play-number">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
-              </svg>
-              <span>1.2亿</span>
-            </div>
-            <img src="~common/image/playList1.jpg" alt="">
-          </div>
-          <p>来杯彩色汽水！论如何优雅的度过夏天</p>
-        </div>
-        <div class="playList">
-          <div class="img-out">
-            <div class="play-number">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
-              </svg>
-              <span>1.2亿</span>
-            </div>
-            <img src="~common/image/playList1.jpg" alt="">
-          </div>
-          <p>来杯彩色汽水！论如何优雅的度过夏天</p>
+          <p>{{item.name}}</p>
         </div>
       </div>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { getBanner, getPersonalized } from 'common/api/discover'
+import { ERR_OK } from 'common/js/config'
+
 export default {
   name: 'musicDiscover',
   components: {
@@ -165,10 +107,47 @@ export default {
           el: '.swiper-pagination',
           clickable: true
         }
-      }
+      },
+      // 轮播图
+      banner: [],
+      // 推荐歌单
+      personalized: []
     }
   },
   mounted () {
+    this._getBanner()
+    this._getPersonalized()
+  },
+  methods: {
+    _getBanner () {
+      getBanner().then(res => {
+        if (res.data.code === ERR_OK) {
+          let list = res.data.banners
+          this.banner = list
+        }
+      })
+    },
+    _getPersonalized () {
+      getPersonalized().then(res => {
+        if (res.data.code === ERR_OK) {
+          let list = res.data.result
+          list.forEach(item => {
+            let numStr = Math.floor(item.playCount).toString()
+            // 亿
+            if (numStr.length > 8) {
+              item.playCount = parseInt(numStr / 10000000) / 10 + '亿'
+            } else if (numStr.length > 3) {
+              item.playCount = parseInt(numStr / 10000) + '万'
+            }
+          })
+          this.personalized = list
+        }
+      })
+    },
+    songsList (id) {
+      console.log(id)
+      this.$router.push(`/musicDiscover/${id}`)
+    }
   }
 }
 </script>
@@ -177,12 +156,16 @@ export default {
     background-color: #fff;
   }
   .swiper-area{
-    border-radius: 40px;
-    height: 130px;
+    height: 120px;
     width: 90%;
     margin-left: 50%;
     transform: translateX(-50%);
     margin-top: -50px;
+    img{
+      border-radius: 10px;
+      width: 100%;
+      height: 100%;
+    }
     .swiper-container{
       border-radius: 10px;
     }
@@ -238,8 +221,17 @@ export default {
         width: 32%;
         font-size: 12px;
         overflow: hidden;
+        text-align: left;
         .img-out{
           position: relative;
+          .gradients{
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 35px;
+            border-radius: 3px;
+            background: linear-gradient(hsla(0, 0%, 64%, 0.4),hsla(0,0%,100%,0));
+          }
           .play-number{
             position: absolute;
             color: #ffffff;

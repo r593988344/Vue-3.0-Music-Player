@@ -7,12 +7,12 @@ import './libs/rem.js'
 import 'scss/variable.scss'
 import 'scss/reset.scss'
 import 'common/fonts/iconfont'
-import Vuex from 'vuex'
 import store from './store/store'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import 'swiper/dist/css/swiper.css'
-Vue.use(Vuex, axios, VueAxios)
+import VueLazyload from 'vue-lazyload'
+Vue.use(VueLazyload, {
+  loading: require('common/image/default.png')
+})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
