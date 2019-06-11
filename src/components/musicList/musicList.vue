@@ -7,7 +7,7 @@
         <div class="bg-mask"></div>
         <img :src="coverImgUrl" alt="" style="width: 100%;height: 100%;">
       </div>
-      <div class="wrapper" ref="wrapper">
+      <scroll :scrollY="true" ref="scroll">
         <div class="business-card">
           <div class="image">
             <div class="image-left">
@@ -79,7 +79,7 @@
               </div>
             </div>
           </div>
-        </div>
+      </scroll>
       </div>
 </template>
 
@@ -87,8 +87,12 @@
 import { getPersonalizedDetail } from 'common/api/discover'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
+import Scroll from '@/components/baseComponent/scroll/scroll'
 export default {
   name: 'musicList',
+  components: {
+    Scroll
+  },
   data () {
     return {
       songLists: [],
@@ -159,7 +163,7 @@ export default {
     }
     .wrapper{
       height: calc(100% - 60px);
-      overflow-y: scroll;
+      overflow: hidden;
     }
     .back-to{
       height: 50px;
