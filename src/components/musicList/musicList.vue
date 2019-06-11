@@ -1,13 +1,13 @@
 <template>
     <div class="music-list">
+      <div class="back-to">
+        歌单
+      </div>
       <div class="bg-img">
         <div class="bg-mask"></div>
         <img :src="coverImgUrl" alt="" style="width: 100%;height: 100%;">
       </div>
-      <div class="back-to">
-        歌单
-      </div>
-      <div class="wrapper">
+      <div class="wrapper" ref="wrapper">
         <div class="business-card">
           <div class="image">
             <div class="image-left">
@@ -55,12 +55,12 @@
             </div>
           </div>
         </div>
-        <div class="song-list">
+        <div class="song-list content">
           <div class="vip">
             <span></span>
             <span class="bloder">会员享高品质听觉盛宴</span>
           </div>
-          <div class="play">
+          <div class="play" id="play">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-z"></use>
             </svg>
@@ -78,7 +78,6 @@
                 </div>
               </div>
             </div>
-            <div class="loading-wrapper"></div>
           </div>
         </div>
       </div>
@@ -115,7 +114,6 @@ export default {
           let playCount = res.data.result.playCount
           this.coverImgUrl = res.data.result.coverImgUrl
           this.songLists = res.data.result.tracks
-          console.log(this.songLists)
           this.name = res.data.result.name
           this.description = res.data.result.description
           this.nickname = res.data.result.creator.nickname
@@ -160,8 +158,8 @@ export default {
       }
     }
     .wrapper{
-      height: calc(100% - 66px);
-      /*overflow-y: scroll;*/
+      height: calc(100% - 60px);
+      overflow-y: scroll;
     }
     .back-to{
       height: 50px;
@@ -267,10 +265,10 @@ export default {
       }
     }
     .song-list{
-      height: calc(100% - 200px);
       background-color: #ffffff;
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
+      height: auto;
       .vip{
         height: 40px;
         line-height: 40px;
@@ -310,7 +308,6 @@ export default {
         height: calc(100% - 80px);
         text-align: left;
         padding: 0 15px;
-        /*overflow-y: auto;*/
         .song{
           height: 40px;
           margin: 20px 0;
