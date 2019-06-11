@@ -68,16 +68,17 @@ export default {
 .music-footer{
   height: 60px;
   background-color: #ffffff;
+  padding-top: 5px;
   .tabs{
     width: 100%;
     .home-tabs{
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
       margin: 0 auto;
       border-radius: 50%;
       .red-bg{
-        height: 35px;
-        width: 35px;
+        height: 32px;
+        width: 32px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -108,7 +109,7 @@ export default {
         span{
           display: block;
           height:  24px;
-          line-height: 24px;
+          line-height: 22px;
           font-size: 10px;
         }
         .icon-tabs{

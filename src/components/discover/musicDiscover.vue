@@ -4,15 +4,10 @@
     <!--顶部红色背景-->
     <div class="red-bc-color top-red"></div>
     <!--轮播图部分-->
-    <div class="swiper-area">
-      <swiper :options="swiperOption" ref="mySwiper">
-        <!-- slides -->
-        <swiper-slide v-for="(item, i) in banner" :key="i"><img :src="item.picUrl" alt=""></swiper-slide>
-        <!-- Optional controls -->
-        <div class="swiper-pagination"  slot="pagination"></div>
-      </swiper>
-    </div>
-    <!--导航列表-->
+    <slider>
+      <div v-for="(item, i) in banner" :key="i" class="slide-item"><img :src="item.picUrl" alt=""></div>
+    </slider>
+<!--     导航列表-->
     <div class="guide-lists">
       <ul>
         <li>
@@ -86,12 +81,13 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { getBanner, getPersonalized } from 'common/api/discover'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
-
+import Slider from '@/components/baseComponent/slider/slider'
 export default {
   name: 'musicDiscover',
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+    Slider
   },
   data () {
     return {
@@ -115,7 +111,7 @@ export default {
       personalized: []
     }
   },
-  mounted () {
+  created () {
     this._getBanner()
     this._getPersonalized()
   },
