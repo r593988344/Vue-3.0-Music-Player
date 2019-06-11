@@ -12,6 +12,7 @@
 
 <script>
 import BScroll from 'better-scroll'
+import { addClass } from 'common/js/dom'
 export default {
   data () {
     return {
@@ -43,6 +44,12 @@ export default {
       this._initSlider()
       this._onScrollEnd()
     }, 20)
+    window.addEventListener('resize', () => {
+      if (!this.slider) {
+        return
+      }
+      this._setSliderWidth(true)
+    })
   },
   methods: {
     _setSliderWidth () {
@@ -53,6 +60,7 @@ export default {
         const child = this.children[i]
         child.style.width = sliderWidth + 'px'
         width += sliderWidth
+        addClass(child, 'slider-item')
       }
       if (this.loop) {
         width += 2 * sliderWidth
@@ -123,7 +131,6 @@ export default {
       text-align: center;
       img {
         display: block;
-        width: 90%;
         border-radius: 8px;
       }
     }

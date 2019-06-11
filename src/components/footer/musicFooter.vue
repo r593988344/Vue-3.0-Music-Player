@@ -66,15 +66,16 @@ export default {
 <style lang="scss" scoped>
 @import "~common/scss/variable.scss";
 .music-footer{
-  height: 60px;
+  height: 66px;
   background-color: #ffffff;
-  padding-top: 5px;
+  overflow: hidden;
   .tabs{
     width: 100%;
     .home-tabs{
       width: 32px;
       height: 32px;
       margin: 0 auto;
+      margin-top: 5px;
       border-radius: 50%;
       .red-bg{
         height: 32px;
@@ -101,8 +102,8 @@ export default {
       justify-content: space-between;
       li{
         float: left;
-        width: 60px;
-        height: 60px;
+        width: 56px;
+        height: 56px;
         font-size: $font-size-md;
         display: flex;
         align-items: baseline;

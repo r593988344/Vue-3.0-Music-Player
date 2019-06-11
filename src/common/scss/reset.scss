@@ -18,9 +18,12 @@ label{
   font-family: inherit;
   vertical-align: baseline;
 }
-div,body,html{
+body,html{
   width: 100%;
   height: 100%;
+}
+div{
+  width: 100%;
 }
 html {
   font-family: '微软雅黑';

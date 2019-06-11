@@ -7,78 +7,82 @@
         <div class="bg-mask"></div>
         <img :src="coverImgUrl" alt="" style="width: 100%;height: 100%;">
       </div>
-      <scroll :scrollY="true" ref="scroll">
-        <div class="business-card">
-          <div class="image">
-            <div class="image-left">
-              <img :src="coverImgUrl" alt="">
-              <div class="play-number">
+      <scroll class="song-list-scroll" :data="songLists">
+        <div>
+          <div class="business-card">
+            <div class="image">
+              <div class="image-left">
+                <img :src="coverImgUrl" alt="">
+                <div class="play-number">
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-z"></use>
+                  </svg>
+                  <span>{{playCount}}</span>
+                </div>
+              </div>
+              <div class="introduce">
+                <p class="title">{{name}}</p>
+                <div>
+                  <img class="sm-icon" :src="avatarUrl" alt="">
+                  <span>{{nickname}}</span>
+                </div>
+                <p class="description">{{description}}</p>
+              </div>
+            </div>
+            <div class="business-card-bottom">
+              <div class="song-icons">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-z"></use>
+                  <use xlink:href="#icon-faxian1"></use>
                 </svg>
-                <span>{{playCount}}</span>
+                <span>{{commentCount}}</span>
+              </div>
+              <div class="song-icons">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-faxian1"></use>
+                </svg>
+                <span>{{shareCount}}</span>
+              </div>
+              <div class="song-icons">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-faxian1"></use>
+                </svg>
+                <span>下载</span>
+              </div>
+              <div class="song-icons">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-faxian1"></use>
+                </svg>
+                <span>多选</span>
               </div>
             </div>
-            <div class="introduce">
-              <p class="title">{{name}}</p>
-              <div>
-                <img class="sm-icon" :src="avatarUrl" alt="">
-                <span>{{nickname}}</span>
-              </div>
-              <p class="description">{{description}}</p>
-            </div>
           </div>
-          <div class="business-card-bottom">
-            <div class="song-icons">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-faxian1"></use>
-              </svg>
-              <span>{{commentCount}}</span>
+          <div class="song-list content">
+            <div class="vip">
+              <span></span>
+              <span class="bloder">会员享高品质听觉盛宴</span>
             </div>
-            <div class="song-icons">
+            <div class="play" id="play">
               <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-faxian1"></use>
+                <use xlink:href="#icon-z"></use>
               </svg>
-              <span>{{shareCount}}</span>
+              <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
             </div>
-            <div class="song-icons">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-faxian1"></use>
-              </svg>
-              <span>下载</span>
-            </div>
-            <div class="song-icons">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-faxian1"></use>
-              </svg>
-              <span>多选</span>
-            </div>
-          </div>
-        </div>
-        <div class="song-list content">
-          <div class="vip">
-            <span></span>
-            <span class="bloder">会员享高品质听觉盛宴</span>
-          </div>
-          <div class="play" id="play">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-z"></use>
-            </svg>
-            <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
-          </div>
             <div class="songs">
-              <div v-for="(item, index) of songLists" :key="index" class="song">
-                <i>{{index+1}}</i>
-                <div class="artist">
-                  <p>{{item.name}}</p>
-                  <p>
-                    <span v-for="(names, index) of item.artists" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
-                    <span>-{{item.name}}</span>
-                  </p>
+              <div>
+                <div v-for="(item, index) of songLists" :key="index" class="song">
+                  <i>{{index+1}}</i>
+                  <div class="artist">
+                    <p>{{item.name}}</p>
+                    <p>
+                      <span v-for="(names, index) of item.artists" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
+                      <span>-{{item.name}}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </scroll>
       </div>
 </template>
@@ -87,7 +91,7 @@
 import { getPersonalizedDetail } from 'common/api/discover'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
-import Scroll from '@/components/baseComponent/scroll/scroll'
+import Scroll from '@/baseComponent/scroll/scroll'
 export default {
   name: 'musicList',
   components: {
@@ -136,13 +140,18 @@ export default {
 <style lang="scss" scoped>
 @import "~common/scss/variable.scss";
   .music-list{
-    height: calc(100% - 60px);
+    height: calc(100% - 64px);
     width: 100%;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
     background-color: #ffffff;
+    overflow: hidden;
+    .song-list-scroll{
+      height: calc(100% - 60px);
+      overflow: hidden;
+    }
     .bg-img{
       position: fixed;
       height: 280px;
@@ -172,7 +181,6 @@ export default {
     }
     .business-card{
       margin-top: 16px;
-      height: auto;
       color: #ffffff;
       .image{
         height: 140px;
@@ -272,7 +280,6 @@ export default {
       background-color: #ffffff;
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
-      height: auto;
       .vip{
         height: 40px;
         line-height: 40px;
@@ -309,9 +316,10 @@ export default {
         }
       }
       .songs{
-        height: calc(100% - 80px);
+        height: 100%;
         text-align: left;
         padding: 0 15px;
+        overflow: hidden;
         .song{
           height: 40px;
           margin: 20px 0;
