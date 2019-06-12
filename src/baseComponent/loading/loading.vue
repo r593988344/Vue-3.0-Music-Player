@@ -1,6 +1,9 @@
 <template>
   <div class="loading">
     <img src="./loading.svg" alt="">
+    <div>
+      {{title}}
+    </div>
   </div>
 </template>
 
@@ -10,7 +13,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '正在载入'
+      default: '正在加载...'
     }
   },
   data () {
@@ -21,9 +24,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "~common/scss/variable.scss";
   .loading{
-    width: 40px;
+    width: 60px;
     text-align: center;
     margin: 0 auto;
+    font-size: $font-size-sm;
+    color: $font-color-gray;
+    img{
+      padding-bottom: 5px;
+      width: 30px;
+    }
   }
 </style>

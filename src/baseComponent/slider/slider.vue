@@ -130,6 +130,7 @@ export default {
       overflow: hidden;
       text-align: center;
       img {
+        width: 100%;
         display: block;
         border-radius: 8px;
       }
@@ -145,8 +146,8 @@ export default {
     .dot {
       display: inline-block;
       margin: 0 4px;
-      width: 8px;
-      height: 8px;
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
       background-color: #fff;
       &.active {
