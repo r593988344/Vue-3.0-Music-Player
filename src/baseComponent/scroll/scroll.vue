@@ -16,6 +16,14 @@ export default {
       type: Boolean,
       default: false
     },
+    scrollX: {
+      type: Boolean,
+      default: false
+    },
+    scrollY: {
+      type: Boolean,
+      default: true
+    },
     data: {
       type: Array,
       default: null
@@ -31,6 +39,10 @@ export default {
     refreshDelay: {
       type: Number,
       default: 20
+    },
+    scrollDisable: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -45,7 +57,8 @@ export default {
       }
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
-        click: this.click
+        click: this.click,
+        scrollX: this.scrollX
       })
 
       if (this.listenScroll) {
@@ -83,6 +96,15 @@ export default {
       setTimeout(() => {
         this.refresh()
       }, this.refreshDelay)
+    },
+    scrollDisable () {
+      if (this.scrollDisable) {
+        setTimeout(() => {
+          this.disable()
+        }, this.refreshDelay)
+      } else {
+        this.enable()
+      }
     }
   }
 }

@@ -1,14 +1,33 @@
 <template>
+  <transition name="slide">
     <div class="music-list">
       <div class="back-to">
-        歌单
+        <span class="back" @click="Back">
+          Back
+        </span>
+        <div class="title-scroll">
+          {{topTitle}}
+        </div>
       </div>
-      <div class="bg-img">
+      <!--      // 吸顶播放-->
+      <div v-show="playTopShow" class="play playTop">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-z"></use>
+        </svg>
+        <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
+      </div>
+      <!--      背景虚化-->
+      <div class="bg-img" v-if="coverImgUrl">
         <div class="bg-mask"></div>
         <img :src="coverImgUrl" alt="" style="width: 100%;height: 100%;">
       </div>
-      <scroll class="song-list-scroll" :data="songLists">
-        <div>
+      <!--      // 滚动区域-->
+      <scroll class="song-list-scroll"
+              :data="songLists"
+              @scroll="scroll"
+              :listen-scroll="listenScroll"
+              :probeType="probeType">
+        <div class="flex-contain">
           <div class="business-card">
             <div class="image">
               <div class="image-left">
@@ -21,7 +40,7 @@
                 </div>
               </div>
               <div class="introduce">
-                <p class="title">{{name}}</p>
+                <p class="title" ref="titleName">{{name}}</p>
                 <div>
                   <img class="sm-icon" :src="avatarUrl" alt="">
                   <span>{{nickname}}</span>
@@ -56,35 +75,23 @@
               </div>
             </div>
           </div>
-          <div class="song-list content">
+          <!--          歌曲列表-->
+          <song-list :songLists="songLists" ref="songList">
             <div class="vip">
               <span></span>
               <span class="bloder">会员享高品质听觉盛宴</span>
             </div>
-            <div class="play" id="play">
+            <div v-show="!playTopShow"  class="play" ref="play">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
               </svg>
               <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
             </div>
-            <div class="songs">
-              <div>
-                <div v-for="(item, index) of songLists" :key="index" class="song">
-                  <i>{{index+1}}</i>
-                  <div class="artist">
-                    <p>{{item.name}}</p>
-                    <p>
-                      <span v-for="(names, index) of item.artists" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
-                      <span>-{{item.name}}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </song-list>
         </div>
       </scroll>
-      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -92,10 +99,12 @@ import { getPersonalizedDetail } from 'common/api/discover'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
+import SongList from '@/baseComponent/songList/songList'
 export default {
   name: 'musicList',
   components: {
-    Scroll
+    Scroll,
+    SongList
   },
   data () {
     return {
@@ -108,13 +117,48 @@ export default {
       playCount: '',
       shareCount: '',
       commentCount: '',
-      trackCount: ''
+      trackCount: '',
+      probeType: 3,
+      listenScroll: true,
+      playTopShow: false,
+      topTitle: '歌单',
+      scrollX: true,
+      slide: 'slide-right'
     }
   },
   mounted () {
     this._getPersonalizedDetail()
+    // 获取初始播放按钮距离顶部高度
+    this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
   },
   methods: {
+    // 返回上一级
+    Back () {
+      this.$router.go(-1)
+    },
+    // 获取滚动坐标
+    scroll (pos) {
+      let posY = pos.y
+      let titleNameTop = this.$refs.titleName.clientHeight
+      this.changeTitle(posY, titleNameTop)
+      this.floatingCover(posY, this.playTop)
+    },
+    // 滑动吊顶
+    floatingCover (posY, offsetTop) {
+      if (Math.abs(posY) >= offsetTop) {
+        this.playTopShow = true
+      } else {
+        this.playTopShow = false
+      }
+    },
+    // 滑动改变标题
+    changeTitle (posY, offsetTop) {
+      if (posY <= -offsetTop) {
+        this.topTitle = this.name
+      } else {
+        this.topTitle = '歌单'
+      }
+    },
     _getPersonalizedDetail () {
       let id = this.$route.params.id
       getPersonalizedDetail(id).then(res => {
@@ -139,6 +183,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "~common/scss/variable.scss";
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.2s
+}
+.slide-enter, .slide-leave-to {
+  transform: translate3d(30%, 0, 0);
+  opacity: 0;
+}
   .music-list{
     height: calc(100% - 64px);
     width: 100%;
@@ -152,20 +203,31 @@ export default {
       height: calc(100% - 60px);
       overflow: hidden;
     }
+    .overflowY {
+      overflow-y: scroll;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
     .bg-img{
       position: fixed;
-      height: 280px;
+      height: calc(100% - 150px);
       z-index: -1;
+      top: 0;
+      left: 0;
       .bg-mask{
         background-color: rgba(0, 0, 0, 0.62);
         opacity: 0.3;
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
-        height: 280px;
+        height: 100%;
         z-index: 1;
       }
       img{
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
         -webkit-filter: blur(30px); /* Chrome, Safari, Opera */
         filter: blur(30px);
       }
@@ -178,9 +240,25 @@ export default {
       height: 50px;
       line-height: 50px;
       color: #ffffff;
+      position: relative;
+      .back{
+        float: left;
+        width: 20%;
+      }
+      >div{
+        width: 50%;
+        margin-left: 25%;
+        overflow: hidden;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        .title-scroll{
+          white-space: nowrap;
+        }
+      }
     }
     .business-card{
-      margin-top: 16px;
       color: #ffffff;
       .image{
         height: 140px;
@@ -249,13 +327,18 @@ export default {
           line-height: 30px;
           float: left;
           padding-left: 4px;
+          width: calc(100% - 40px);
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         p{
           font-size: $font-size-smm;
           display: -webkit-box;
-          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          overflow : hidden;
           -webkit-line-clamp: 2;
-          overflow: hidden;
+          -webkit-box-orient: vertical;
           padding-right: 1px;
           text-align: left;
           margin-top: 5px;
@@ -289,32 +372,6 @@ export default {
           font-weight: 400;
         }
       }
-      .play{
-        height: 40px;
-        line-height: 40px;
-        display: flex;
-        align-items: center;
-        padding: 0 10px;
-        .play-all{
-          font-size: $font-size-lg;
-          font-weight: bold;
-          padding-left: 10px;
-          line-height: 40px;
-          display: flex;
-          align-items: center;
-          i{
-            font-size: $font-size-md;
-            margin-left: 5px;
-            color: $font-color-gray;
-          }
-        }
-        .icon{
-          font-size: 20px;
-          border: 1px solid #000;
-          border-radius: 13px;
-          float: left;
-        }
-      }
       .songs{
         height: 100%;
         text-align: left;
@@ -346,6 +403,37 @@ export default {
             }
           }
         }
+      }
+    }
+    .playTop{
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+    .play{
+      height: 40px;
+      line-height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      background-color: #ffffff;
+      .play-all{
+        font-size: $font-size-lg;
+        font-weight: bold;
+        padding-left: 10px;
+        line-height: 40px;
+        display: flex;
+        align-items: center;
+        i{
+          font-size: $font-size-md;
+          margin-left: 5px;
+          color: $font-color-gray;
+        }
+      }
+      .icon{
+        font-size: 20px;
+        border: 1px solid #000;
+        border-radius: 13px;
+        float: left;
       }
     }
   }

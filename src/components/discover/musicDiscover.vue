@@ -1,81 +1,90 @@
 <!-- The ref attr used to find the swiper instance -->
 <template>
   <div class="discover">
-    <!--顶部红色背景-->
-    <div class="red-bc-color top-red"></div>
-    <!--轮播图部分-->
-    <div v-if="banner.length">
-      <slider>
-        <div v-for="(item, i) in banner" :key="i">
-          <img :src="item.picUrl" alt="">
-        </div>
-      </slider>
-    </div>
-<!--     导航列表-->
-    <div class="guide-lists">
-      <ul>
-        <li>
-          <div class="circle-bg red-bc-color">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-rili"></use>
-          </svg>
-        </div>
-          <span>每日推荐</span>
-        </li>
-        <li>
-          <div class="circle-bg red-bc-color">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-musicyinle"></use>
-            </svg>
-          </div>
-          <span>歌单</span>
-        </li>
-        <li>
-          <div class="circle-bg red-bc-color">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-paixingbang"></use>
-            </svg>
-          </div>
-          <span>排行榜</span>
-        </li>
-        <li>
-          <div class="circle-bg red-bc-color">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
-            </svg>
-          </div>
-          <span>电台</span>
-        </li>
-        <li>
-          <div class="circle-bg red-bc-color">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-icon_zhibo-xian"></use>
-            </svg>
-          </div>
-          <span>直播</span>
-        </li>
-      </ul>
-    </div>
-    <!--推荐歌单-->
-    <div class="recommend">
-      <h2>推荐歌单</h2>
-      <div class="recommend-lists">
-        <div class="playList" v-for="(item, index) of personalized" :key="index">
-          <div class="img-out" @click="songsList(item.id)">
-            <div class="play-number">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
-              </svg>
-              <span>{{item.playCount}}</span>
+    <scroll
+      class="scroll-contain"
+      :click="click"
+      :data="personalized">
+      <div>
+        <!--顶部红色背景-->
+        <div class="red-bc-color top-red"></div>
+        <!--轮播图部分-->
+        <div v-if="banner.length">
+          <slider>
+            <div v-for="(item, i) in banner" :key="i">
+              <img :src="item.picUrl" alt="">
             </div>
-            <div class="gradients"></div>
-            <img v-lazy="item.picUrl" alt="">
+          </slider>
+        </div>
+        <!--     导航列表-->
+        <div class="guide-lists">
+          <ul>
+            <li>
+              <div class="circle-bg red-bc-color">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-rili"></use>
+                </svg>
+              </div>
+              <span>每日推荐</span>
+            </li>
+            <li>
+              <div class="circle-bg red-bc-color">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-musicyinle"></use>
+                </svg>
+              </div>
+              <span>歌单</span>
+            </li>
+            <li>
+              <div class="circle-bg red-bc-color">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-paixingbang"></use>
+                </svg>
+              </div>
+              <span>排行榜</span>
+            </li>
+            <li>
+              <div class="circle-bg red-bc-color">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-faxian2"></use>
+                </svg>
+              </div>
+              <span>电台</span>
+            </li>
+            <li>
+              <div class="circle-bg red-bc-color">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-icon_zhibo-xian"></use>
+                </svg>
+              </div>
+              <span>直播</span>
+            </li>
+          </ul>
+        </div>
+        <!--推荐歌单-->
+        <div class="recommend">
+          <h2>推荐歌单</h2>
+          <div class="recommend-lists">
+            <div class="playList" v-for="(item, index) of personalized" :key="index">
+              <div class="img-out" @click="songsList(item.id)">
+                <div class="play-number">
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-z"></use>
+                  </svg>
+                  <span>{{item.playCount}}</span>
+                </div>
+                <div class="gradients"></div>
+                <img v-lazy="item.picUrl" alt="">
+              </div>
+              <p>{{item.name}}</p>
+            </div>
           </div>
-          <p>{{item.name}}</p>
         </div>
       </div>
-    </div>
-    <router-view></router-view>
+    </scroll>
+    <transition name="slide">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -86,12 +95,15 @@ import { getBanner, getPersonalized } from 'common/api/discover'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 import Slider from '@/baseComponent/slider/slider'
+import Scroll from '@/baseComponent/scroll/scroll'
+
 export default {
   name: 'musicDiscover',
   components: {
     swiper,
     swiperSlide,
-    Slider
+    Slider,
+    Scroll
   },
   data () {
     return {
@@ -112,7 +124,8 @@ export default {
       // 轮播图
       banner: [],
       // 推荐歌单
-      personalized: []
+      personalized: [],
+      click: true
     }
   },
   created () {
@@ -140,12 +153,24 @@ export default {
       })
     },
     songsList (id) {
+      console.log('sss')
       this.$router.push(`/musicDiscover/${id}`)
     }
   }
 }
 </script>
 <style scoped lang="scss">
+  .scroll-contain{
+    height: 100%;
+    overflow: hidden;
+  }
+  .slide-enter-active, .slide-leave-active {
+    transition: all 0.2s
+  }
+  .slide-enter, .slide-leave-to {
+    transform: translate3d(30%, 0, 0);
+    opacity: 0;
+  }
   .discover{
     background-color: #fff;
   }
@@ -201,7 +226,6 @@ export default {
     }
   }
   .recommend{
-    height: auto;
     h2{
       text-align: left;
       margin-left: 10px;
