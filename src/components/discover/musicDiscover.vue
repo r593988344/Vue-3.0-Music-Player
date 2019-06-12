@@ -81,6 +81,9 @@
           </div>
         </div>
       </div>
+      <div class="loading-container" v-show="!personalized.length">
+        <loading></loading>
+      </div>
     </scroll>
     <transition name="slide">
       <router-view></router-view>
@@ -89,21 +92,18 @@
 </template>
 
 <script>
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { getBanner, getPersonalized } from 'common/api/discover'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
-import Slider from '@/baseComponent/slider/slider'
-import Scroll from '@/baseComponent/scroll/scroll'
-
+import Slider from 'baseComponent/slider/slider'
+import Scroll from 'baseComponent/scroll/scroll'
+import Loading from 'baseComponent/loading/loading'
 export default {
   name: 'musicDiscover',
   components: {
-    swiper,
-    swiperSlide,
     Slider,
-    Scroll
+    Scroll,
+    Loading
   },
   data () {
     return {
@@ -163,6 +163,12 @@ export default {
   .scroll-contain{
     height: 100%;
     overflow: hidden;
+    .loading-container{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+    }
   }
   .slide-enter-active, .slide-leave-active {
     transition: all 0.2s

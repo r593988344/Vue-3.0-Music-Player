@@ -8,8 +8,10 @@ import 'scss/variable.scss'
 import 'scss/reset.scss'
 import 'common/fonts/iconfont'
 import store from './store/store'
-import 'swiper/dist/css/swiper.css'
 import VueLazyload from 'vue-lazyload'
+import fastclick from 'fastclick'
+
+fastclick.attach(document.body)
 Vue.use(VueLazyload, {
   loading: require('common/image/default.png')
 })

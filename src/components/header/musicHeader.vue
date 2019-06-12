@@ -9,9 +9,7 @@
         </svg>
         <input class="search-input" type="text" placeholder="请输入要搜索的歌曲">
       </form>
-      <svg class="icon icon-playing" aria-hidden="true">
-        <use xlink:href="#icon-PCbofangye_paihangbang"></use>
-      </svg>
+      <img src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;">
     </div>
 </template>
 

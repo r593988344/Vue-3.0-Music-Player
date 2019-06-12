@@ -19,7 +19,7 @@
       <!--      背景虚化-->
       <div class="bg-img" v-if="coverImgUrl">
         <div class="bg-mask"></div>
-        <img :src="coverImgUrl" alt="" style="width: 100%;height: 100%;">
+        <div class="dim-bg" :style="bgStyle" alt="" style="width: 100%;height: 100%;"></div>
       </div>
       <!--      // 滚动区域-->
       <scroll class="song-list-scroll"
@@ -177,6 +177,11 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    bgStyle () {
+      return `background-image: url(${this.coverImgUrl})`
+    }
   }
 }
 </script>
@@ -223,13 +228,14 @@ export default {
         height: 100%;
         z-index: 1;
       }
-      img{
+      .dim-bg{
         height: 100%;
         position: absolute;
         top: 0;
         left: 0;
         -webkit-filter: blur(30px); /* Chrome, Safari, Opera */
         filter: blur(30px);
+        background-position:center top;
       }
     }
     .wrapper{

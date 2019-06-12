@@ -15,12 +15,17 @@
         </div>
       </div>
     </div>
+    <div class="loading-container" v-show="!songLists.length">
+      <loading></loading>
+    </div>
   </div>
 </template>
 
 <script>
+import Loading from '../loading/loading'
 export default {
   name: 'songList',
+  components: { Loading },
   props: {
     songLists: {
       type: Array
@@ -34,6 +39,12 @@ export default {
 
 <style lang="scss" scoped>
   @import "~common/scss/variable.scss";
+  .loading-container{
+    position: absolute;
+    left: 50%;
+    top: calc(50% + 80px);
+    transform: translate(-50%,-50%);
+  }
   .song-list{
     background-color: #ffffff;
     border-top-left-radius: 15px;
