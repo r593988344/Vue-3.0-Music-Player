@@ -21,7 +21,7 @@
         <!--     导航列表-->
         <div class="guide-lists">
           <ul>
-            <li>
+            <li @click="toDaily()">
               <div class="circle-bg red-bc-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-rili"></use>
@@ -158,6 +158,9 @@ export default {
     songsList (id, musicList) {
       this.$router.push(`/musicDiscover/${id}`)
       this.setMuiscList(musicList)
+    },
+    toDaily () {
+      this.$router.push('/musicDiscover/dailySong')
     },
     ...mapMutations({
       setMuiscList: 'SET_MUSIC_LIST'

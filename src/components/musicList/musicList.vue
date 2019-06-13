@@ -17,17 +17,18 @@
         <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
       </div>
       <!--      背景虚化-->
-      <div class="bg-img" v-if="musicList.picUrl" ref="bgImg">
+      <div class="bg-img" ref="bgImg">
         <div class="bg-mask"></div>
         <div class="dim-bg" :style="bgStyle" alt="" style="width: 100%;height: 100%;"></div>
       </div>
-      <!--      // 滚动区域-->
+      <!--       滚动区域-->
       <scroll class="song-list-scroll"
               :data="songLists"
               @scroll="scroll"
               :listen-scroll="listenScroll"
               :probeType="probeType">
         <div class="flex-contain">
+          <!--     头部图片-->
           <div class="business-card">
             <div class="image">
               <div class="image-left">
@@ -77,10 +78,6 @@
           </div>
           <!--          歌曲列表-->
           <song-list :songLists="songLists">
-            <div class="vip">
-              <span></span>
-              <span class="bloder">会员享高品质听觉盛宴</span>
-            </div>
             <div v-show="!playTopShow"  class="play" ref="play">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
@@ -95,7 +92,7 @@
 </template>
 
 <script>
-import { getPersonalizedDetail } from 'common/api/discover'
+import { getPersonalizedDetail, getDailySong } from 'common/api/discover'
 import { mapGetters } from 'vuex'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
@@ -134,7 +131,7 @@ export default {
   mounted () {
     this._getPersonalizedDetail()
     // 获取初始播放按钮距离顶部高度
-    this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
+    this.playTop = this.$refs.play.offsetTop
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
   },
@@ -169,6 +166,14 @@ export default {
     },
     _getPersonalizedDetail () {
       let id = this.$route.params.id
+      if (this.$route.params.id === 'dailySong') {
+        getDailySong().then(res => {
+          if (res.data.code === ERR_OK) {
+            this.songLists = res.data.result
+          }
+        })
+        return
+      }
       getPersonalizedDetail(id).then(res => {
         if (res.data.code === ERR_OK) {
           this.songLists = res.data.result.tracks
@@ -222,7 +227,7 @@ export default {
     }
     .bg-img{
       position: fixed;
-      height: 270px;
+      height: 260px;
       z-index: -1;
       top: 0;
       left: 0;
@@ -370,37 +375,34 @@ export default {
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
     }
-    .play{
-      height: 40px;
-      line-height: 40px;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      background-color: #ffffff;
-      .play-all{
-        font-size: $font-size-lg;
-        font-weight: bold;
-        padding-left: 10px;
-        line-height: 40px;
-        display: flex;
-        align-items: center;
-        i{
-          font-size: $font-size-md;
-          margin-left: 5px;
-          color: $font-color-gray;
-        }
-      }
-      .icon{
-        font-size: 20px;
-        border: 1px solid #000;
-        border-radius: 13px;
-        float: left;
-      }
+  }
+.play{
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background-color: #ffffff;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  .play-all{
+    font-size: $font-size-lg;
+    font-weight: bold;
+    padding-left: 10px;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    i{
+      font-size: $font-size-md;
+      margin-left: 5px;
+      color: $font-color-gray;
     }
   }
-  .vip{
-    height: 40px;
-    line-height: 40px;
-    border-bottom: 1px solid #e1e1e1;
+  .icon{
+    font-size: 20px;
+    border: 1px solid #000;
+    border-radius: 13px;
+    float: left;
   }
+}
 </style>

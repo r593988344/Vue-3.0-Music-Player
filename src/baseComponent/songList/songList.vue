@@ -46,16 +46,15 @@ export default {
     transform: translate(-50%,-50%);
   }
   .song-list{
-    background-color: #ffffff;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
     min-height: 100%;
     height: auto;
+    overflow: hidden;
   .songs{
     height: 100%;
     text-align: left;
     padding: 0 15px;
     overflow: hidden;
+    background-color: #ffffff;
   .song{
     height: 40px;
     margin: 20px 0;

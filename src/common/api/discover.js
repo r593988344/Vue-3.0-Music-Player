@@ -26,3 +26,8 @@ export function MVdata (id) {
   const url = Host + '/mv?mvid=' + id
   return axios.get(url)
 }
+// 获取每日推荐歌曲
+export function getDailySong (id) {
+  const url = Host + '/personalized/newsong'
+  return axios.get(url)
+}
