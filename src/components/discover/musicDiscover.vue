@@ -78,7 +78,7 @@
                 <div class="gradients"></div>
                 <img v-lazy="item.picUrl" alt="">
               </div>
-              <p>{{item.name}}</p>
+              <p class="text-ellipsis-two-line">{{item.name}}</p>
             </div>
           </div>
         </div>
@@ -157,7 +157,6 @@ export default {
     },
     songsList (id, musicList) {
       this.$router.push(`/musicDiscover/${id}`)
-      console.log(musicList)
       this.setMuiscList(musicList)
     },
     ...mapMutations({
@@ -167,6 +166,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+  @import "~common/scss/variable.scss";
   .scroll-contain{
     height: 100%;
     overflow: hidden;
@@ -221,7 +221,7 @@ export default {
         width: auto;
         display: inline-block;
         span{
-          font-size: 12px;
+          font-size: $font-size-sm;
           line-height: 34px;
           display: inline-block;
         }
@@ -251,7 +251,7 @@ export default {
       padding: 0 10px;
       .playList{
         width: 32%;
-        font-size: 12px;
+        font-size: $font-size-sm;
         overflow: hidden;
         text-align: left;
         .img-out{
@@ -267,15 +267,14 @@ export default {
           .play-number{
             position: absolute;
             color: #ffffff;
-            font-size: 16px;
-            height: auto;
+            font-size: $font-size-lg;
             width: auto;
             right: 10px;
             .icon{
               vertical-align: middle;
             }
             span{
-              font-size: 10px;
+              font-size: $font-size-smm;
               margin-left: -5px;
             }
           }
@@ -287,9 +286,6 @@ export default {
         }
         p{
           display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
           margin-top: 5px;
           margin-bottom: 15px;
           padding-right: 1px;

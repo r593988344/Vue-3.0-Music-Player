@@ -17,7 +17,7 @@
         <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
       </div>
       <!--      背景虚化-->
-      <div class="bg-img" v-if="musicList.picUrl">
+      <div class="bg-img" v-if="musicList.picUrl" ref="bgImg">
         <div class="bg-mask"></div>
         <div class="dim-bg" :style="bgStyle" alt="" style="width: 100%;height: 100%;"></div>
       </div>
@@ -36,11 +36,11 @@
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-z"></use>
                   </svg>
-                  <span>{{playCount}}</span>
+                  <span>{{musicList.playCount}}</span>
                 </div>
               </div>
               <div class="introduce">
-                <p class="title" ref="titleName">{{name}}</p>
+                <p class="title" ref="titleName">{{musicList.name}}</p>
                 <div>
                   <img class="sm-icon" :src="avatarUrl" alt="">
                   <span class="text-ellipsis-one-line">{{nickname}}</span>
@@ -97,7 +97,6 @@
 <script>
 import { getPersonalizedDetail } from 'common/api/discover'
 import { mapGetters } from 'vuex'
-import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
@@ -109,29 +108,35 @@ export default {
   },
   data () {
     return {
+      // 歌曲列表数据
       songLists: [],
-      coverImgUrl: '',
-      name: '',
+      // 专辑描述
       description: '',
+      // 专辑小图标
       avatarUrl: '',
+      // 小图标右边标题
       nickname: '',
-      playCount: '',
+      // 分享数量
       shareCount: '',
+      // 评论数
       commentCount: '',
+      // 歌曲数
       trackCount: '',
       probeType: 3,
       listenScroll: true,
       playTopShow: false,
       topTitle: '歌单',
-      scrollX: true,
-      slide: 'slide-right'
+      // scrollX: true,
+      // slide: 'slide-right',
+      bgImgHeight: null
     }
   },
   mounted () {
     this._getPersonalizedDetail()
     // 获取初始播放按钮距离顶部高度
     this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
-    console.log(this.musicList)
+    // 获取头部虚化图片高度
+    this.bgImgHeight = this.$refs.bgImg.clientHeight
   },
   methods: {
     // 返回上一级
@@ -141,6 +146,7 @@ export default {
     // 获取滚动坐标
     scroll (pos) {
       let posY = pos.y
+      posY >= 0 && (this.$refs.bgImg.style.height = (this.bgImgHeight + posY) + 'px')
       let titleNameTop = this.$refs.titleName.clientHeight
       this.changeTitle(posY, titleNameTop)
       this.floatingCover(posY, this.playTop)
@@ -156,7 +162,7 @@ export default {
     // 滑动改变标题
     changeTitle (posY, offsetTop) {
       if (posY <= -offsetTop) {
-        this.topTitle = this.name
+        this.topTitle = this.musicList.name
       } else {
         this.topTitle = '歌单'
       }
@@ -165,15 +171,10 @@ export default {
       let id = this.$route.params.id
       getPersonalizedDetail(id).then(res => {
         if (res.data.code === ERR_OK) {
-          let playCount = res.data.result.playCount
-          // TODO: 需要用vuex进行对上个页面数据的缓存
-          this.coverImgUrl = res.data.result.coverImgUrl
           this.songLists = res.data.result.tracks
-          this.name = res.data.result.name
           this.description = res.data.result.description
           this.nickname = res.data.result.creator.nickname
           this.avatarUrl = res.data.result.creator.avatarUrl
-          this.playCount = playExchange(playCount)
           this.shareCount = res.data.result.shareCount
           this.commentCount = res.data.result.commentCount
           this.trackCount = res.data.result.trackCount
@@ -221,7 +222,7 @@ export default {
     }
     .bg-img{
       position: fixed;
-      height: calc(100% - 150px);
+      height: 270px;
       z-index: -1;
       top: 0;
       left: 0;
@@ -241,6 +242,7 @@ export default {
         left: 0;
         -webkit-filter: blur(30px); /* Chrome, Safari, Opera */
         filter: blur(30px);
+        background-size:cover;
         background-position:center top;
       }
     }

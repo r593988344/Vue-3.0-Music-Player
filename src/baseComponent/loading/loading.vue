@@ -33,7 +33,7 @@ export default {
     color: $font-color-gray;
     img{
       padding-bottom: 5px;
-      width: 30px;
+      width: 50%;
     }
   }
 </style>

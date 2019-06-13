@@ -49,6 +49,8 @@ export default {
     background-color: #ffffff;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
+    min-height: 100%;
+    height: auto;
   .songs{
     height: 100%;
     text-align: left;

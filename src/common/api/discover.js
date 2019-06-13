@@ -23,6 +23,6 @@ export function getMVrank (limit) {
 }
 // 获取mv数据
 export function MVdata (id) {
-  const url = Host + '/mv/detail?mvid=' + id
+  const url = Host + '/mv?mvid=' + id
   return axios.get(url)
 }

@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper">
+  <div ref="wrapper" class="scroll-body">
     <slot></slot>
   </div>
 </template>
@@ -43,6 +43,10 @@ export default {
     scrollDisable: {
       type: Boolean,
       default: false
+    },
+    pullUpLoad: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -58,7 +62,8 @@ export default {
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
         click: this.click,
-        scrollX: this.scrollX
+        scrollX: this.scrollX,
+        pullUpLoad: this.pullUpLoad
       })
 
       if (this.listenScroll) {
@@ -69,7 +74,7 @@ export default {
       }
       if (this.pullup) {
         this.scroll.on('scrollEnd', () => {
-          if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+          if (this.scroll.y <= (this.scroll.maxScrollY + 80)) {
             this.$emit('scrollToEnd')
           }
         })
@@ -110,6 +115,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.scroll-body{
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
 </style>

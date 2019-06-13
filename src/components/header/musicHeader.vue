@@ -25,6 +25,9 @@ export default {
   align-items: center;
   width: 100%;
   height: 60px;
+  img{
+    z-index: 999;
+  }
   form{
     display: flex;
     align-items: center;
