@@ -6,7 +6,7 @@
           Back
         </span>
         <div class="title-scroll">
-          {{topTitle}}
+          <div>{{topTitle}}</div>
         </div>
       </div>
       <!--      // 吸顶播放-->
@@ -17,7 +17,7 @@
         <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
       </div>
       <!--      背景虚化-->
-      <div class="bg-img" v-if="coverImgUrl">
+      <div class="bg-img" v-if="musicList.picUrl">
         <div class="bg-mask"></div>
         <div class="dim-bg" :style="bgStyle" alt="" style="width: 100%;height: 100%;"></div>
       </div>
@@ -31,7 +31,7 @@
           <div class="business-card">
             <div class="image">
               <div class="image-left">
-                <img :src="coverImgUrl" alt="">
+                <img :src="musicList.picUrl" alt="">
                 <div class="play-number">
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-z"></use>
@@ -43,9 +43,9 @@
                 <p class="title" ref="titleName">{{name}}</p>
                 <div>
                   <img class="sm-icon" :src="avatarUrl" alt="">
-                  <span>{{nickname}}</span>
+                  <span class="text-ellipsis-one-line">{{nickname}}</span>
                 </div>
-                <p class="description">{{description}}</p>
+                <p class="description text-ellipsis-two-line">{{description}}</p>
               </div>
             </div>
             <div class="business-card-bottom">
@@ -76,7 +76,7 @@
             </div>
           </div>
           <!--          歌曲列表-->
-          <song-list :songLists="songLists" ref="songList">
+          <song-list :songLists="songLists">
             <div class="vip">
               <span></span>
               <span class="bloder">会员享高品质听觉盛宴</span>
@@ -96,6 +96,7 @@
 
 <script>
 import { getPersonalizedDetail } from 'common/api/discover'
+import { mapGetters } from 'vuex'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
@@ -130,6 +131,7 @@ export default {
     this._getPersonalizedDetail()
     // 获取初始播放按钮距离顶部高度
     this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
+    console.log(this.musicList)
   },
   methods: {
     // 返回上一级
@@ -164,6 +166,7 @@ export default {
       getPersonalizedDetail(id).then(res => {
         if (res.data.code === ERR_OK) {
           let playCount = res.data.result.playCount
+          // TODO: 需要用vuex进行对上个页面数据的缓存
           this.coverImgUrl = res.data.result.coverImgUrl
           this.songLists = res.data.result.tracks
           this.name = res.data.result.name
@@ -180,8 +183,11 @@ export default {
   },
   computed: {
     bgStyle () {
-      return `background-image: url(${this.coverImgUrl})`
-    }
+      return `background-image: url(${this.musicList.picUrl})`
+    },
+    ...mapGetters([
+      'musicList'
+    ])
   }
 }
 </script>
@@ -334,17 +340,10 @@ export default {
           float: left;
           padding-left: 4px;
           width: calc(100% - 40px);
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+          text-align: left;
         }
         p{
           font-size: $font-size-smm;
-          display: -webkit-box;
-          text-overflow: ellipsis;
-          overflow : hidden;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
           padding-right: 1px;
           text-align: left;
           margin-top: 5px;
@@ -362,52 +361,6 @@ export default {
           margin: 0;
           padding-right: 15px;
           font-size: $font-size-sm;
-        }
-      }
-    }
-    .song-list{
-      background-color: #ffffff;
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-      .vip{
-        height: 40px;
-        line-height: 40px;
-        border-bottom: 1px solid #f1f1f1;
-        .bloder{
-          font-size: $font-size-lg;
-          font-weight: 400;
-        }
-      }
-      .songs{
-        height: 100%;
-        text-align: left;
-        padding: 0 15px;
-        overflow: hidden;
-        .song{
-          height: 40px;
-          margin: 20px 0;
-          i{
-            float: left;
-            display: inline-block;
-            line-height: 40px;
-            color: $font-color-gray;
-          }
-          .artist{
-            float: left;
-            width: 90%;
-            padding-left: 14px;
-            p{
-              font-size: $font-size-lg;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
-            }
-            span{
-              font-size: $font-size-sm;
-              color: $font-color-gray;
-            }
-          }
         }
       }
     }
@@ -442,5 +395,10 @@ export default {
         float: left;
       }
     }
+  }
+  .vip{
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #e1e1e1;
   }
 </style>

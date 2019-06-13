@@ -15,3 +15,14 @@ export function getPersonalizedDetail (id) {
   const url = Host + '/playlist/detail?id=' + id
   return axios.get(url)
 }
+// 获取视频排行
+// limit 取出数量，默认为30
+export function getMVrank (limit) {
+  const url = Host + '/top/mv?limit=' + limit
+  return axios.get(url)
+}
+// 获取mv数据
+export function MVdata (id) {
+  const url = Host + '/mv/detail?mvid=' + id
+  return axios.get(url)
+}

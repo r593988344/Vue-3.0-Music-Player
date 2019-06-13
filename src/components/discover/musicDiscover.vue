@@ -12,7 +12,9 @@
         <div v-if="banner.length">
           <slider>
             <div v-for="(item, i) in banner" :key="i">
-              <img :src="item.picUrl" alt="">
+              <a :href="item.url">
+                <img :src="item.picUrl" alt="">
+              </a>
             </div>
           </slider>
         </div>
@@ -66,7 +68,7 @@
           <h2>推荐歌单</h2>
           <div class="recommend-lists">
             <div class="playList" v-for="(item, index) of personalized" :key="index">
-              <div class="img-out" @click="songsList(item.id)">
+              <div class="img-out" @click="songsList(item.id, item)">
                 <div class="play-number">
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-z"></use>
@@ -93,6 +95,7 @@
 
 <script>
 import { getBanner, getPersonalized } from 'common/api/discover'
+import { mapMutations } from 'vuex'
 import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 import Slider from 'baseComponent/slider/slider'
@@ -152,10 +155,14 @@ export default {
         }
       })
     },
-    songsList (id) {
-      console.log('sss')
+    songsList (id, musicList) {
       this.$router.push(`/musicDiscover/${id}`)
-    }
+      console.log(musicList)
+      this.setMuiscList(musicList)
+    },
+    ...mapMutations({
+      setMuiscList: 'SET_MUSIC_LIST'
+    })
   }
 }
 </script>

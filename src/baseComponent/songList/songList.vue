@@ -49,15 +49,6 @@ export default {
     background-color: #ffffff;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-  .vip{
-    height: 40px;
-    line-height: 40px;
-    border-bottom: 1px solid #f1f1f1;
-  .bloder{
-    font-size: $font-size-lg;
-    font-weight: 400;
-  }
-  }
   .songs{
     height: 100%;
     text-align: left;

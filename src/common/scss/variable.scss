@@ -10,8 +10,20 @@ $font-size-md: 14px;
 // 大字号
 $font-size-lg: 16px;
 // 灰色字体
-$font-color-gray: #aaaaaa;
+$font-color-gray: #d9d9d9;
 .red-bc-color{
   background-color: $background-r-color;
 }
 
+.text-ellipsis-one-line{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.text-ellipsis-two-line{
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow : hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
