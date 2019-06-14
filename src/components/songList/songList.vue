@@ -5,7 +5,7 @@
           Back
         </span>
         <div class="title-scroll">
-          <div>歌单广场</div>
+          <div>歌单广场1</div>
         </div>
       </div>
     </div>
