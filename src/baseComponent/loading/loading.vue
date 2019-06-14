@@ -1,3 +1,4 @@
+<!------加载动画组件------>
 <template>
   <div class="loading">
     <img src="./loading.svg" alt="">
@@ -6,6 +7,7 @@
     </div>
   </div>
 </template>
+<!------加载动画组件------>
 
 <script>
 export default {
@@ -14,10 +16,6 @@ export default {
     title: {
       type: String,
       default: '正在加载...'
-    }
-  },
-  data () {
-    return {
     }
   }
 }

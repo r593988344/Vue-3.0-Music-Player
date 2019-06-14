@@ -26,7 +26,7 @@ export default {
   width: 100%;
   height: 60px;
   img{
-    z-index: 999;
+    z-index: 9999;
   }
   form{
     display: flex;

@@ -63,25 +63,8 @@
             </li>
           </ul>
         </div>
-        <!--推荐歌单-->
-        <div class="recommend">
-          <h2>推荐歌单</h2>
-          <div class="recommend-lists">
-            <div class="playList" v-for="(item, index) of personalized" :key="index">
-              <div class="img-out" @click="songsList(item.id, item)">
-                <div class="play-number">
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-z"></use>
-                  </svg>
-                  <span>{{item.playCount}}</span>
-                </div>
-                <div class="gradients"></div>
-                <img v-lazy="item.picUrl" alt="">
-              </div>
-              <p class="text-ellipsis-two-line">{{item.name}}</p>
-            </div>
-          </div>
-        </div>
+        <h2>推荐歌单</h2>
+        <song-group-list :songList="personalized"></song-group-list>
       </div>
       <div class="loading-container" v-show="!personalized.length">
         <loading></loading>
@@ -95,18 +78,18 @@
 
 <script>
 import { getBanner, getPersonalized } from 'common/api/discover'
-import { mapMutations } from 'vuex'
-import { playExchange } from 'common/js/playExchange'
 import { ERR_OK } from 'common/js/config'
 import Slider from 'baseComponent/slider/slider'
 import Scroll from 'baseComponent/scroll/scroll'
 import Loading from 'baseComponent/loading/loading'
+import SongGroupList from 'baseComponent/songGroupList/songGroupList'
 export default {
   name: 'musicDiscover',
   components: {
     Slider,
     Scroll,
-    Loading
+    Loading,
+    SongGroupList
   },
   data () {
     return {
@@ -114,7 +97,6 @@ export default {
         initialSlide: 0,
         direction: 'horizontal',
         slidesPerView: 1,
-        // mousewheel: true,
         autoplay: {
           disableOnInteraction: false
         },
@@ -152,31 +134,26 @@ export default {
       getPersonalized().then(res => {
         if (res.data.code === ERR_OK) {
           let list = res.data.result
-          list.forEach(item => {
-            item.playCount = playExchange(item.playCount)
-          })
           this.personalized = list
         }
       })
-    },
-    songsList (id, musicList) {
-      this.$router.push(`/musicDiscover/${id}`)
-      this.setMuiscList(musicList)
     },
     toDaily () {
       this.$router.push('/musicDiscover/dailySong')
     },
     toSongList () {
-      this.$router.push('/musicDiscover/songList')
-    },
-    ...mapMutations({
-      setMuiscList: 'SET_MUSIC_LIST'
-    })
+      this.$router.push('/musicDiscover/songListClassify')
+    }
   }
 }
 </script>
 <style scoped lang="scss">
   @import "~common/scss/variable.scss";
+  h2{
+    text-align: left;
+    margin-left: 10px;
+    font-weight: bold;
+  }
   .scroll-contain{
     height: 100%;
     overflow: hidden;
@@ -248,59 +225,5 @@ export default {
       color: #ffffff;
     }
   }
-  .recommend{
-    h2{
-      text-align: left;
-      margin-left: 10px;
-      font-weight: bold;
-    }
-    .recommend-lists{
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      padding: 0 10px;
-      .playList{
-        width: 32%;
-        font-size: $font-size-sm;
-        overflow: hidden;
-        text-align: left;
-        .img-out{
-          position: relative;
-          .gradients{
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 35px;
-            border-radius: 3px;
-            background: linear-gradient(hsla(0, 0%, 64%, 0.4),hsla(0,0%,100%,0));
-          }
-          .play-number{
-            position: absolute;
-            color: #ffffff;
-            font-size: $font-size-lg;
-            width: auto;
-            right: 10px;
-            .icon{
-              vertical-align: middle;
-            }
-            span{
-              font-size: $font-size-smm;
-              margin-left: -5px;
-            }
-          }
-          img{
-            border-radius: 6px;
-            width: 100%;
-            height: 100%;
-          }
-        }
-        p{
-          display: -webkit-box;
-          margin-top: 5px;
-          margin-bottom: 15px;
-          padding-right: 1px;
-        }
-      }
-    }
-  }
+
 </style>

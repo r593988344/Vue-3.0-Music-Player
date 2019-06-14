@@ -32,7 +32,7 @@
           <div class="business-card">
             <div class="image">
               <div class="image-left">
-                <img :src="musicList.picUrl" alt="">
+                <img :src="musicList.picUrl || musicList.coverImgUrl" alt="">
                 <div class="play-number">
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-z"></use>
@@ -123,8 +123,6 @@ export default {
       listenScroll: true,
       playTopShow: false,
       topTitle: '歌单',
-      // scrollX: true,
-      // slide: 'slide-right',
       bgImgHeight: null
     }
   },
@@ -189,7 +187,7 @@ export default {
   },
   computed: {
     bgStyle () {
-      return `background-image: url(${this.musicList.picUrl})`
+      return `background-image: url(${this.musicList.picUrl || this.musicList.coverImgUrl})`
     },
     ...mapGetters([
       'musicList'

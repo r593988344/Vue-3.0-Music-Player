@@ -1,3 +1,4 @@
+<!------歌曲列表组件------->
 <template>
   <div class="song-list content">
     <slot></slot>
@@ -20,6 +21,7 @@
     </div>
   </div>
 </template>
+<!------歌曲列表组件------->
 
 <script>
 import Loading from '../loading/loading'

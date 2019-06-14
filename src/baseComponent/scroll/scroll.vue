@@ -1,8 +1,10 @@
+<!-----better-scroll滚动区域组件------>
 <template>
   <div ref="wrapper" class="scroll-body">
     <slot></slot>
   </div>
 </template>
+<!-----better-scroll滚动区域组件------>
 
 <script>
 import BScroll from 'better-scroll'
@@ -52,7 +54,7 @@ export default {
   mounted () {
     setTimeout(() => {
       this._initScroll()
-    })
+    }, 20)
   },
   methods: {
     _initScroll () {

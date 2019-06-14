@@ -9,9 +9,11 @@ export function playExchange (item) {
   // 亿
   if (numStr.length > 8) {
     item = parseInt(numStr / 10000000) / 10 + '亿'
-  } else if (numStr.length > 3) {
+  } else if (numStr.length > 4) {
     // 万
     item = parseInt(numStr / 10000) + '万'
+  } else {
+    return item
   }
   return item
 }

@@ -32,7 +32,13 @@ export function getDailySong () {
   return axios.get(url)
 }
 // 获取热门歌单分类
-export function getHotList () {
-  const url = Host + '/playlist/hot'
+export function getTopList (type) {
+  const url = Host + '/top/playlist?tag=' + type
+  // const url = Host + '/playlist/catlist'
+  return axios.get(url)
+}
+// 获取精品歌单C
+export function getCompetitive (timer) {
+  const url = Host + '/top/playlist/highquality?before=' + timer
   return axios.get(url)
 }

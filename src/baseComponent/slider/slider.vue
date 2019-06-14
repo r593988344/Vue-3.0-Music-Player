@@ -1,3 +1,4 @@
+<!------Banner图组件------>
 <template>
   <div class="slider" ref="slider">
     <div class="slider-group" ref="sliderGroup">
@@ -9,6 +10,7 @@
     </div>
   </div>
 </template>
+<!------Banner图组件------>
 
 <script>
 import BScroll from 'better-scroll'
@@ -44,6 +46,7 @@ export default {
       this._initSlider()
       this._onScrollEnd()
     }, 20)
+    // 页面大小发生变化后重新计算
     window.addEventListener('resize', () => {
       if (!this.slider) {
         return
@@ -52,6 +55,7 @@ export default {
     })
   },
   methods: {
+    // 设置轮播图总宽度
     _setSliderWidth () {
       let width = 0
       this.children = this.$refs.sliderGroup.children
@@ -67,6 +71,7 @@ export default {
       }
       this.$refs.sliderGroup.style.width = width + 'px'
     },
+    // 初始化轮播参数
     _initSlider () {
       this.slider = new BScroll(this.$refs.slider, {
         scrollX: true,
@@ -151,7 +156,6 @@ export default {
       border-radius: 50%;
       background-color: #fff;
       &.active {
-        // width: 10px;
         border-radius: 5px;
         background-color: $background-r-color;
       }
