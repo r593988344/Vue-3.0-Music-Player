@@ -132,6 +132,10 @@ export default {
     }
   },
   created () {
+    // 刷新页面后重定向到首页
+    if (this.$router.path !== '/musicDiscover') {
+      this.$router.replace('/musicDiscover')
+    }
     this._getBanner()
     this._getPersonalized()
   },

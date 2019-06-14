@@ -6,7 +6,7 @@
         <div v-for="(item, index) of songLists" :key="index" class="song">
           <i>{{index+1}}</i>
           <div class="artist">
-            <p>{{item.name}}</p>
+            <p class="text-ellipsis-one-line">{{item.name}}</p>
             <p>
               <span v-for="(names, index) of item.artists" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
               <span>-{{item.name}}</span>
@@ -40,10 +40,7 @@ export default {
 <style lang="scss" scoped>
   @import "~common/scss/variable.scss";
   .loading-container{
-    position: absolute;
-    left: 50%;
-    top: calc(50% + 80px);
-    transform: translate(-50%,-50%);
+    position: relative;
   }
   .song-list{
     min-height: 100%;
@@ -70,10 +67,6 @@ export default {
     padding-left: 14px;
   p{
     font-size: $font-size-lg;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
   }
   span{
     font-size: $font-size-sm;

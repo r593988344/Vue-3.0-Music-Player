@@ -6,6 +6,7 @@ import MusicFriends from '@/components/friends/musicFriends'
 import MusicAccount from '@/components/account/musicAccount'
 import MusicVideos from '@/components/videos/musicVideos'
 import MusicList from '@/components/musicList/musicList'
+import DailySong from '@/components/dailySong/dailySong'
 Vue.use(Router)
 
 export default new Router({
@@ -19,6 +20,10 @@ export default new Router({
       path: '/musicDiscover',
       component: MusicDiscover,
       children: [
+        {
+          path: 'dailySong',
+          component: DailySong
+        },
         {
           path: ':id',
           component: MusicList

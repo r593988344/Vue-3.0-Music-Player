@@ -131,7 +131,7 @@ export default {
   mounted () {
     this._getPersonalizedDetail()
     // 获取初始播放按钮距离顶部高度
-    this.playTop = this.$refs.play.offsetTop
+    this.playTop = this.$refs.play.offsetTop + 1
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
   },
@@ -231,6 +231,7 @@ export default {
       z-index: -1;
       top: 0;
       left: 0;
+      overflow: hidden;
       .bg-mask{
         background-color: rgba(0, 0, 0, 0.62);
         opacity: 0.3;

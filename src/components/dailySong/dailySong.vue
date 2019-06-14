@@ -1,0 +1,205 @@
+<template>
+  <transition name="slide">
+    <div class="music-list">
+      <div class="back-to">
+        <span class="back" @click="Back">
+          Back
+        </span>
+      </div>
+      <!--      // 吸顶播放-->
+      <div v-show="playTopShow" class="play playTop">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-z"></use>
+        </svg>
+        <span class="play-all">播放全部</span>
+      </div>
+      <!--      头部背景-->
+      <div class="bg-img" ref="bgImg">
+        <div class="dim-bg" alt="" style="width: 100%;height: 100%;"></div>
+      </div>
+      <!--       滚动区域-->
+      <scroll class="song-list-scroll"
+              :data="songLists"
+              @scroll="scroll"
+              :listen-scroll="listenScroll"
+              :probeType="probeType">
+        <div class="flex-contain">
+          <div class="business-card">
+            <div><span>{{nowDate.day }}</span>/{{nowDate.month }}</div>
+            <p>根据你的音乐口味，为你推荐好音乐、好朋友</p>
+          </div>
+          <!--          歌曲列表-->
+          <song-list :songLists="songLists">
+            <div v-show="!playTopShow"  class="play" ref="play">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-z"></use>
+              </svg>
+              <span class="play-all">播放全部</span>
+            </div>
+          </song-list>
+        </div>
+      </scroll>
+    </div>
+  </transition>
+</template>
+
+<script>
+import { getDailySong } from 'common/api/discover'
+import { ERR_OK } from 'common/js/config'
+import Scroll from '@/baseComponent/scroll/scroll'
+import SongList from '@/baseComponent/songList/songList'
+export default {
+  name: 'dailySong',
+  components: {
+    Scroll,
+    SongList
+  },
+  data () {
+    return {
+      // 歌曲列表数据
+      songLists: [],
+      probeType: 3,
+      listenScroll: true,
+      playTopShow: false,
+      bgImgHeight: null,
+      nowDate: {
+        day: '',
+        month: ''
+      }
+    }
+  },
+  mounted () {
+    this._getDailySong()
+    // 获取初始播放按钮距离顶部高度
+    this.playTop = this.$refs.play.offsetTop + 1
+    // 获取头部虚化图片高度
+    this.bgImgHeight = this.$refs.bgImg.clientHeight
+    this.nowDate.day = new Date().getDate()
+    this.nowDate.month = new Date().getMonth() + 1
+  },
+  methods: {
+    // 返回上一级
+    Back () {
+      this.$router.go(-1)
+    },
+    // 获取滚动坐标
+    scroll (pos) {
+      let posY = pos.y
+      posY >= 0 && (this.$refs.bgImg.style.height = (this.bgImgHeight + posY) + 'px')
+      this.floatingCover(posY, this.playTop)
+    },
+    // 滑动吊顶
+    floatingCover (posY, offsetTop) {
+      if (-posY >= offsetTop) {
+        this.playTopShow = true
+      } else {
+        this.playTopShow = false
+      }
+    },
+    _getDailySong () {
+      getDailySong().then(res => {
+        if (res.data.code === ERR_OK) {
+          this.songLists = res.data.result
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "~common/scss/variable.scss";
+  .slide-enter-active, .slide-leave-active {
+    transition: all 0.2s
+  }
+  .slide-enter, .slide-leave-to {
+    transform: translate3d(30%, 0, 0);
+    opacity: 0;
+  }
+  .music-list{
+    height: calc(100% - 64px);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background-color: #ffffff;
+    overflow: hidden;
+    .song-list-scroll{
+      height: calc(100% - 60px);
+      overflow: hidden;
+    }
+    .bg-img{
+      position: fixed;
+      height: 140px;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      .dim-bg{
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-image: url("~common/image/test.png");
+        background-size:cover;
+        background-position:center top;
+      }
+    }
+    .wrapper{
+      height: calc(100% - 60px);
+      overflow: hidden;
+    }
+    .back-to{
+      height: 50px;
+      line-height: 50px;
+      color: #ffffff;
+      position: relative;
+      .back{
+        float: left;
+        width: 20%;
+      }
+    }
+    .business-card{
+      color: #ffffff;
+      text-align: left;
+      padding-bottom: 20px;
+      span{
+        padding-left: 10px;
+        font-size: 22px;
+      }
+      p{
+        font-size: $font-size-sm;
+        padding-left: 10px;
+      }
+    }
+    .playTop{
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+  }
+  .play{
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background-color: #ffffff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    .play-all{
+      font-size: $font-size-lg;
+      font-weight: bold;
+      padding-left: 10px;
+      line-height: 40px;
+      display: flex;
+      align-items: center;
+    }
+    .icon{
+      font-size: 20px;
+      border: 1px solid #000;
+      border-radius: 13px;
+      float: left;
+    }
+  }
+</style>
