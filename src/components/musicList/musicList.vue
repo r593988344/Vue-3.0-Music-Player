@@ -1,8 +1,8 @@
 <template>
   <transition name="slide">
-    <div class="music-list">
+    <div class="router-music-list">
       <div class="back-to">
-        <span class="back" @click="Back">
+        <span class="back" @click="back">
           Back
         </span>
         <div class="title-scroll">
@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     // 返回上一级
-    Back () {
+    back () {
       this.$router.go(-1)
     },
     // 获取滚动坐标
@@ -200,30 +200,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "~common/scss/variable.scss";
-.slide-enter-active, .slide-leave-active {
-  transition: all 0.2s
-}
-.slide-enter, .slide-leave-to {
-  transform: translate3d(30%, 0, 0);
-  opacity: 0;
-}
-  .music-list{
-    height: calc(100% - 64px);
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    background-color: #ffffff;
-    overflow: hidden;
+@import "~common/scss/common.scss";
+.router-music-list{
     .song-list-scroll{
       height: calc(100% - 60px);
       overflow: hidden;
-    }
-    .overflowY {
-      overflow-y: scroll;
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
     }
     .bg-img{
       position: fixed;
@@ -255,28 +236,6 @@ export default {
     .wrapper{
       height: calc(100% - 60px);
       overflow: hidden;
-    }
-    .back-to{
-      height: 50px;
-      line-height: 50px;
-      color: #ffffff;
-      position: relative;
-      .back{
-        float: left;
-        width: 20%;
-      }
-      >div{
-        width: 50%;
-        margin-left: 25%;
-        overflow: hidden;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        .title-scroll{
-          white-space: nowrap;
-        }
-      }
     }
     .business-card{
       color: #ffffff;

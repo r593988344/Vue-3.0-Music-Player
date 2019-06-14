@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import MusicDiscover from '@/components/discover/musicDiscover'
-import MusicMine from '@/components/mine/musicMine'
-import MusicFriends from '@/components/friends/musicFriends'
-import MusicAccount from '@/components/account/musicAccount'
-import MusicVideos from '@/components/videos/musicVideos'
-import MusicList from '@/components/musicList/musicList'
-import DailySong from '@/components/dailySong/dailySong'
+const MusicDiscover = () => import(/* webpackChunkName: "group-foo" */ '@/components/discover/musicDiscover')
+const MusicMine = () => import(/* webpackChunkName: "group-foo" */ '@/components/mine/musicMine')
+const MusicFriends = () => import(/* webpackChunkName: "group-foo" */ '@/components/friends/musicFriends')
+const MusicAccount = () => import(/* webpackChunkName: "group-foo" */ '@/components/account/musicAccount')
+const MusicVideos = () => import(/* webpackChunkName: "group-foo" */ '@/components/videos/musicVideos')
+const MusicList = () => import(/* webpackChunkName: "group-foo" */ '@/components/musicList/musicList')
+const DailySong = () => import(/* webpackChunkName: "group-foo" */ '@/components/dailySong/dailySong')
+const SongList = () => import(/* webpackChunkName: "group-foo" */ '@/components/songList/songList')
 Vue.use(Router)
 
 export default new Router({
@@ -23,6 +24,10 @@ export default new Router({
         {
           path: 'dailySong',
           component: DailySong
+        },
+        {
+          path: 'SongList',
+          component: SongList
         },
         {
           path: ':id',

@@ -1,8 +1,8 @@
 <template>
   <transition name="slide">
-    <div class="music-list">
+    <div class="router-music-list">
       <div class="back-to">
-        <span class="back" @click="Back">
+        <span class="back" @click="back">
           Back
         </span>
       </div>
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     // 返回上一级
-    Back () {
+    back () {
       this.$router.go(-1)
     },
     // 获取滚动坐标
@@ -109,22 +109,8 @@ export default {
 
 <style lang="scss" scoped>
   @import "~common/scss/variable.scss";
-  .slide-enter-active, .slide-leave-active {
-    transition: all 0.2s
-  }
-  .slide-enter, .slide-leave-to {
-    transform: translate3d(30%, 0, 0);
-    opacity: 0;
-  }
-  .music-list{
-    height: calc(100% - 64px);
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    background-color: #ffffff;
-    overflow: hidden;
+  @import "~common/scss/common.scss";
+  .router-music-list{
     .song-list-scroll{
       height: calc(100% - 60px);
       overflow: hidden;
@@ -149,16 +135,6 @@ export default {
     .wrapper{
       height: calc(100% - 60px);
       overflow: hidden;
-    }
-    .back-to{
-      height: 50px;
-      line-height: 50px;
-      color: #ffffff;
-      position: relative;
-      .back{
-        float: left;
-        width: 20%;
-      }
     }
     .business-card{
       color: #ffffff;

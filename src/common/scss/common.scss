@@ -1,0 +1,39 @@
+.router-music-list{
+  height: calc(100% - 64px);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: #ffffff;
+  overflow: hidden;
+  .back-to{
+    height: 50px;
+    line-height: 50px;
+    color: #ffffff;
+    position: relative;
+    .back{
+      float: left;
+      width: 20%;
+    }
+    >div{
+      width: 50%;
+      margin-left: 25%;
+      overflow: hidden;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      .title-scroll{
+        white-space: nowrap;
+      }
+    }
+  }
+}
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.2s
+}
+.slide-enter, .slide-leave-to {
+  transform: translate3d(30%, 0, 0);
+  opacity: 0;
+}

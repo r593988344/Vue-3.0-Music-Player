@@ -27,7 +27,12 @@ export function MVdata (id) {
   return axios.get(url)
 }
 // 获取每日推荐歌曲
-export function getDailySong (id) {
+export function getDailySong () {
   const url = Host + '/personalized/newsong'
+  return axios.get(url)
+}
+// 获取热门歌单分类
+export function getHotList () {
+  const url = Host + '/playlist/hot'
   return axios.get(url)
 }
