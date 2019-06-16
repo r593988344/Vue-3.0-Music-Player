@@ -43,22 +43,18 @@ export default new Router({
     },
     {
       path: '/musicMine',
-      name: 'musicMine',
       component: MusicMine
     },
     {
       path: '/musicFriends',
-      name: 'musicFriends',
       component: MusicFriends
     },
     {
       path: '/musicAccount',
-      name: 'musicAccount',
       component: MusicAccount
     },
     {
       path: '/musicVideos',
-      name: 'musicVideos',
       component: MusicVideos
     }
   ]

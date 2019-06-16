@@ -11,7 +11,7 @@
             <span>{{item.playCount}}</span>
           </div>
           <div class="gradients"></div>
-          <img v-lazy="item.picUrl ? item.picUrl : item.coverImgUrl" alt="">
+          <img v-lazy="item.picUrl ? item.picUrl : item.coverImgUrl" :key="item.id">
         </div>
         <p class="text-ellipsis-two-line">{{item.name}}</p>
       </div>
@@ -30,6 +30,10 @@ export default {
   props: {
     songList:{
       type: Array
+    },
+    songPath: {
+      type: String,
+      default: ''
     }
   },
   updated () {
@@ -37,7 +41,7 @@ export default {
   },
   methods: {
     songsList (id, musicList) {
-      this.$router.push(`/musicDiscover/songListClassify/${id}`)
+      this.$router.push(`/musicDiscover${this.songPath}/${id}`)
       this.setMusicList(musicList)
     },
     _playExChange () {

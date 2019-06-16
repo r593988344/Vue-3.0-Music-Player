@@ -16,7 +16,7 @@
       </Scroll>
     </div>
     <scroll>
-      <song-group-list :songList="songList"></song-group-list>
+      <song-group-list :songList="songList" :songPath="songPath"></song-group-list>
     </scroll>
     <transition name="slide">
       <router-view></router-view>
@@ -36,7 +36,8 @@ export default {
       songList: [],
       scrollX: true,
       tabs:['推荐', '精品', '华语', '流行', '民谣', '摇滚', '电子'],
-      index: 0
+      index: 0,
+      songPath: '/songListClassify'
     }
   },
   components: {

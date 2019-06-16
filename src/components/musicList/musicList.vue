@@ -170,19 +170,19 @@ export default {
             this.songLists = res.data.result
           }
         })
-        return
+      } else {
+        getPersonalizedDetail(id).then(res => {
+          if (res.data.code === ERR_OK) {
+            this.songLists = res.data.result.tracks
+            this.description = res.data.result.description
+            this.nickname = res.data.result.creator.nickname
+            this.avatarUrl = res.data.result.creator.avatarUrl
+            this.shareCount = res.data.result.shareCount
+            this.commentCount = res.data.result.commentCount
+            this.trackCount = res.data.result.trackCount
+          }
+        })
       }
-      getPersonalizedDetail(id).then(res => {
-        if (res.data.code === ERR_OK) {
-          this.songLists = res.data.result.tracks
-          this.description = res.data.result.description
-          this.nickname = res.data.result.creator.nickname
-          this.avatarUrl = res.data.result.creator.avatarUrl
-          this.shareCount = res.data.result.shareCount
-          this.commentCount = res.data.result.commentCount
-          this.trackCount = res.data.result.trackCount
-        }
-      })
     }
   },
   computed: {

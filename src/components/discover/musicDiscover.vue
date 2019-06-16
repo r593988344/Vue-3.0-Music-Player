@@ -64,7 +64,7 @@
           </ul>
         </div>
         <h2>推荐歌单</h2>
-        <song-group-list :songList="personalized"></song-group-list>
+        <song-group-list :songList="personalized" :songPath="songPath"></song-group-list>
       </div>
       <div class="loading-container" v-show="!personalized.length">
         <loading></loading>
@@ -110,7 +110,8 @@ export default {
       banner: [],
       // 推荐歌单
       personalized: [],
-      click: true
+      click: true,
+      songPath: ''
     }
   },
   created () {
@@ -149,6 +150,7 @@ export default {
 </script>
 <style scoped lang="scss">
   @import "~common/scss/variable.scss";
+  @import "~common/scss/common.scss";
   h2{
     text-align: left;
     margin-left: 10px;
@@ -163,13 +165,6 @@ export default {
       top: 50%;
       transform: translate(-50%,-50%);
     }
-  }
-  .slide-enter-active, .slide-leave-active {
-    transition: all 0.2s
-  }
-  .slide-enter, .slide-leave-to {
-    transform: translate3d(30%, 0, 0);
-    opacity: 0;
   }
   .discover{
     background-color: #fff;

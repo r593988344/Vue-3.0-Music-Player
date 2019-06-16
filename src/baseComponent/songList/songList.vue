@@ -8,7 +8,7 @@
           <i>{{index+1}}</i>
           <div class="artist">
             <p class="text-ellipsis-one-line">{{item.name}}</p>
-            <p>
+            <p class="text-ellipsis-one-line">
               <span v-for="(names, index) of item.artists" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
               <span>-{{item.name}}</span>
             </p>
