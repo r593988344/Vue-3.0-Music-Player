@@ -37,8 +37,16 @@ export function getTopList (type) {
   // const url = Host + '/playlist/catlist'
   return axios.get(url)
 }
-// 获取精品歌单C
+// 获取精品歌单
 export function getCompetitive (timer) {
   const url = Host + '/top/playlist/highquality?before=' + timer
+  return axios.get(url)
+}
+// 获取歌曲详细信息
+export function getSong (ids) {
+  let url = Host + '/song/detail?ids='
+  ids.forEach(item => {
+    url = url + item + ','
+  })
   return axios.get(url)
 }

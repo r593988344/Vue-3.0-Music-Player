@@ -1,14 +1,7 @@
 <template>
   <transition name="slide">
     <div class="router-music-list">
-      <div class="back-to">
-        <span class="back" @click="back">
-          Back
-        </span>
-        <div class="title-scroll">
-          <div>{{topTitle}}</div>
-        </div>
-      </div>
+      <top-title :titleName="topTitle"></top-title>
       <!--      // 吸顶播放-->
       <div v-show="playTopShow" class="play playTop">
         <svg class="icon" aria-hidden="true">
@@ -97,9 +90,11 @@ import { mapGetters } from 'vuex'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
+import TopTitle from 'baseComponent/topTitle/topTitle'
 export default {
   name: 'musicList',
   components: {
+    TopTitle,
     Scroll,
     SongList
   },
@@ -134,10 +129,6 @@ export default {
     this.bgImgHeight = this.$refs.bgImg.clientHeight
   },
   methods: {
-    // 返回上一级
-    back () {
-      this.$router.go(-1)
-    },
     // 获取滚动坐标
     scroll (pos) {
       let posY = pos.y

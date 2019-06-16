@@ -1,13 +1,6 @@
 <template>
   <div class="router-music-list">
-    <div class="back-to">
-        <span class="back" @click="back">
-          Back
-        </span>
-      <div class="title-scroll">
-        <div>歌单广场</div>
-      </div>
-    </div>
+    <top-title :titleName="titleName"></top-title>
     <div class="tabs">
       <Scroll :scrollX="scrollX">
         <ul ref="tabs">
@@ -28,6 +21,7 @@
 import { getTopList, getCompetitive } from 'common/api/discover'
 import SongGroupList from 'baseComponent/songGroupList/songGroupList'
 import Scroll from 'baseComponent/scroll/scroll'
+import TopTitle from 'baseComponent/topTitle/topTitle'
 
 export default {
   name: 'songList',
@@ -37,20 +31,19 @@ export default {
       scrollX: true,
       tabs:['推荐', '精品', '华语', '流行', '民谣', '摇滚', '电子'],
       index: 0,
-      songPath: '/songListClassify'
+      songPath: '/songListClassify',
+      titleName: '歌单广场'
     }
   },
   components: {
     Scroll,
-    SongGroupList
+    SongGroupList,
+    TopTitle
   },
   mounted () {
     this._getTopList('华语')
   },
   methods: {
-    back () {
-      this.$router.go(-1)
-    },
     _getTopList (type) {
       getTopList(type).then(res => {
         this.songList = res.data.playlists
@@ -77,8 +70,8 @@ export default {
 <style lang="scss" scoped>
   @import "~common/scss/common.scss";
   @import "~common/scss/variable.scss";
-  .back-to .back {
-    color: #000;
+  .back-to {
+    color: #000 !important;
   }
 
   .title-scroll {

@@ -8,6 +8,7 @@ const MusicVideos = () => import(/* webpackChunkName: "group-foo" */ '@/componen
 const MusicList = () => import(/* webpackChunkName: "group-foo" */ '@/components/musicList/musicList')
 const DailySong = () => import(/* webpackChunkName: "group-foo" */ '@/components/dailySong/dailySong')
 const SongListClassify = () => import(/* webpackChunkName: "group-foo" */ '@/components/songListClassify/songListClassify')
+const PlayInterface = () => import(/* webpackChunkName: "group-foo" */ '@/components/playInterface/playInterface')
 Vue.use(Router)
 
 export default new Router({
@@ -56,6 +57,10 @@ export default new Router({
     {
       path: '/musicVideos',
       component: MusicVideos
+    },
+    {
+      path: '/playInterface',
+      component: PlayInterface
     }
   ]
 })

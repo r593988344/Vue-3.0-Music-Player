@@ -1,11 +1,7 @@
 <template>
   <transition name="slide">
     <div class="router-music-list">
-      <div class="back-to">
-        <span class="back" @click="back">
-          Back
-        </span>
-      </div>
+     <top-title></top-title>
       <!--      // 吸顶播放-->
       <div v-show="playTopShow" class="play playTop">
         <svg class="icon" aria-hidden="true">
@@ -48,9 +44,11 @@ import { getDailySong } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
+import TopTitle from 'baseComponent/topTitle/topTitle'
 export default {
   name: 'dailySong',
   components: {
+    TopTitle,
     Scroll,
     SongList
   },

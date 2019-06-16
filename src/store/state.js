@@ -1,5 +1,6 @@
 const state = {
-  musicList:{}
+  musicList: {},
+  songDetail: {}
 }
 
 export default state
