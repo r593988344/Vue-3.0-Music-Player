@@ -40,6 +40,44 @@
             </svg>
           </div>
         </div>
+        <div class="progress"></div>
+        <div class="actions">
+          <div>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-faxian2"></use>
+            </svg>
+          </div>
+          <div>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-faxian2"></use>
+            </svg>
+          </div>
+          <div>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-faxian2"></use>
+            </svg>
+          </div>
+          <div>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-faxian2"></use>
+            </svg>
+          </div>
+          <div @click="openPlayLists">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-faxian2"></use>
+            </svg>
+          </div>
+        </div>
+        <transition name="topSlide">
+          <div v-show="playListShow" class="playLists">
+            <ul>
+              <li v-for="(item,index) of playList" :key="index" class="text-ellipsis-one-line">{{item.name}}
+                <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
+              </li>
+            </ul>
+            <div class="close" @click="closePlayList">关闭</div>
+          </div>
+        </transition>
       </div>
     </div>
   </transition>
@@ -53,11 +91,19 @@ export default {
   components: { TopTitle },
   data () {
     return {
+      playListShow: false
     }
   },
   methods: {
     back () {
       this.playHide(false)
+    },
+    openPlayLists () {
+      console.log(this.playList)
+      this.playListShow = true
+    },
+    closePlayList () {
+      this.playListShow = false
     },
     ...mapMutations({
       playHide: 'SHOW_PLAY'
@@ -78,13 +124,23 @@ export default {
         return ''
       }
     },
-    ...mapGetters(['songDetail', 'showPlay'])
+    ...mapGetters(['songDetail', 'showPlay', 'playList'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "~common/scss/common.scss";
+@import "~common/scss/variable.scss";
+.topSlide-enter-active, .topSlide-leave-active {
+  transition: all 0.5s
+}
+.topSlide-enter {
+  transform: translate3d(0, 100%, 0);
+}
+.topSlide-leave-to {
+  transform: translate3d(0, 100%, 0);
+}
 .play-song{
   position: fixed;
   top: 0;
@@ -170,6 +226,42 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
+    }
+  }
+  .actions{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 30px;
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+  }
+  .playLists{
+    background-color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 60%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    text-align: left;
+    line-height: 30px;
+    li{
+      border-bottom: 1px solid $font-color-gray;
+      font-size: $font-size-lg;
+      padding-left: 10px;
+      span{
+        font-size: $font-size-sm;
+      }
+    }
+    .close{
+      text-align: center;
+      line-height: 50px;
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      border-top: 1px solid $font-color-gray;
     }
   }
 }

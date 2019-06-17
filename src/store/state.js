@@ -11,6 +11,8 @@ const state = {
   playing: false,
   // 播放列表
   playList: [],
+  // 播放队列
+  sequenceList: [],
   // 播放模式 (顺序：0，循环：1，随机：2)
   mode: playMode.sequence,
   // 当前播放索引

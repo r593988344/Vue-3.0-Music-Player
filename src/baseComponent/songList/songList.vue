@@ -4,7 +4,7 @@
     <slot></slot>
     <div class="songs">
       <div>
-        <div v-for="(item, index) of songLists" :key="index" class="song" @click="playSong(item.id)">
+        <div v-for="(item, index) of songLists" :key="index" class="song" @click="playSong(item, index)">
           <i>{{index+1}}</i>
           <div class="artist">
             <p class="text-ellipsis-one-line">{{item.name}}</p>
@@ -27,7 +27,7 @@
 import Loading from '../loading/loading'
 import { getSong } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions, mapGetters } from 'vuex'
 export default {
   name: 'songList',
   components: { Loading },
@@ -40,8 +40,12 @@ export default {
     }
   },
   methods: {
-    playSong (id) {
-      this._getSong(id)
+    playSong (item, index) {
+      let songList = Object.assign([], this.playList)
+      songList.push(item)
+      console.log(this.playList)
+      this.selectPlay({ list: songList, index: index })
+      this._getSong(item.id)
     },
     _getSong (ids) {
       getSong([ids]).then(res => {
@@ -55,7 +59,16 @@ export default {
     ...mapMutations({
       setSongDetail: 'SET_SONG_DETAIL',
       showPlay: 'SHOW_PLAY'
-    })
+    }),
+    ...mapActions([
+      'selectPlay'
+    ]
+    )
+  },
+  computed: {
+    ...mapGetters([
+      'playList'
+    ])
   }
 }
 </script>

@@ -11,15 +11,18 @@ export default {
     state.showPlay = showPlay
   },
   [types.SET_PLAYING] (state, playing) {
-    state.showPlay = playing
+    state.playing = playing
   },
   [types.SET_PLAY_LIST] (state, playList) {
-    state.showPlay = playList
+    state.playList = playList
+  },
+  [types.SET_SEQUENCE_LIST] (state, sequenceList) {
+    state.sequenceList = sequenceList
   },
   [types.SET_MODE] (state, mode) {
-    state.showPlay = mode
+    state.mode = mode
   },
   [types.SET_CURRENT_INDEX] (state, currentIndex) {
-    state.showPlay = currentIndex
+    state.currentIndex = currentIndex
   }
 }
