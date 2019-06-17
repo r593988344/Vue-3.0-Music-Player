@@ -9,13 +9,22 @@
         </svg>
         <input class="search-input" type="text" placeholder="请输入要搜索的歌曲">
       </form>
-      <img src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;">
+      <img src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
     </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
-  name: 'musicHeader'
+  name: 'musicHeader',
+  methods: {
+    _showPlay () {
+      this.showPlay(true)
+    },
+    ...mapMutations({
+      showPlay: 'SHOW_PLAY'
+    })
+  }
 }
 </script>
 

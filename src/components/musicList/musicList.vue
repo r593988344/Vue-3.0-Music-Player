@@ -1,5 +1,4 @@
 <template>
-  <transition name="slide">
     <div class="router-music-list">
       <top-title :titleName="topTitle"></top-title>
       <!--      // 吸顶播放-->
@@ -81,7 +80,6 @@
         </div>
       </scroll>
     </div>
-  </transition>
 </template>
 
 <script>

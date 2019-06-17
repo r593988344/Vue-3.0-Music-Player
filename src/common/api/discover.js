@@ -33,7 +33,8 @@ export function getDailySong () {
 }
 // 获取热门歌单分类
 export function getTopList (type) {
-  const url = Host + '/top/playlist?tag=' + type
+  let types = encodeURI(type)
+  const url = Host + '/top/playlist?cat=' + types
   // const url = Host + '/playlist/catlist'
   return axios.get(url)
 }

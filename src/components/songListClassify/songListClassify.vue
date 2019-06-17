@@ -41,7 +41,7 @@ export default {
     TopTitle
   },
   mounted () {
-    this._getTopList('华语')
+    this._getTopList('全部')
   },
   methods: {
     _getTopList (type) {
@@ -56,9 +56,19 @@ export default {
     },
     tabTitle (i) {
       switch (i) {
-      case 0: this._getTopList('华语')
+      case 0: this._getTopList('全部')
         break
       case 1: this._getCompetitive()
+        break
+      case 2: this._getTopList('华语')
+        break
+      case 3: this._getTopList('流行')
+        break
+      case 4: this._getTopList('民谣')
+        break
+      case 5: this._getTopList('摇滚')
+        break
+      case 6: this._getTopList('电子')
         break
       }
       this.index = i
@@ -96,6 +106,12 @@ export default {
         padding: 0 5px;
         line-height: 34px;
         margin: 0 10px;
+      }
+      li:nth-child(1){
+        color: $background-r-color;
+      }
+      li:nth-child(2){
+        color: #ffb22e;
       }
     }
   }

@@ -41,7 +41,6 @@ export default {
   },
   methods: {
     playSong (id) {
-      this.$router.push({ path: '/playInterface' })
       this._getSong(id)
     },
     _getSong (ids) {
@@ -49,11 +48,13 @@ export default {
         if (res.data.code === ERR_OK) {
           let songDetail = res.data.songs[0]
           this.setSongDetail(songDetail)
+          this.showPlay(true)
         }
       })
     },
     ...mapMutations({
-      setSongDetail: 'SET_SONG_DETAIL'
+      setSongDetail: 'SET_SONG_DETAIL',
+      showPlay: 'SHOW_PLAY'
     })
   }
 }

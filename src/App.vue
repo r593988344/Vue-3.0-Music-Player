@@ -6,6 +6,7 @@
         <router-view/>
       </keep-alive>
     </div>
+    <play-interface></play-interface>
     <music-footer></music-footer>
   </div>
 </template>
@@ -13,9 +14,11 @@
 <script>
 import MusicHeader from 'components/header/musicHeader'
 import MusicFooter from 'components/footer/musicFooter'
+import PlayInterface from 'components/playInterface/playInterface'
 export default {
   name: 'App',
   components: {
+    PlayInterface,
     MusicHeader,
     MusicFooter
   }
