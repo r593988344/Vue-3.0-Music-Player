@@ -27,7 +27,7 @@
 import Loading from '../loading/loading'
 import { getSong } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
-import { mapMutations, mapActions, mapGetters } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 export default {
   name: 'songList',
   components: { Loading },
@@ -41,10 +41,7 @@ export default {
   },
   methods: {
     playSong (item, index) {
-      let songList = Object.assign([], this.playList)
-      songList.push(item)
-      console.log(this.playList)
-      this.selectPlay({ list: songList, index: index })
+      this.selectPlay({ list: this.songLists, index: index })
       this._getSong(item.id)
     },
     _getSong (ids) {
@@ -64,11 +61,6 @@ export default {
       'selectPlay'
     ]
     )
-  },
-  computed: {
-    ...mapGetters([
-      'playList'
-    ])
   }
 }
 </script>
@@ -95,7 +87,7 @@ export default {
     float: left;
     display: inline-block;
     line-height: 40px;
-    color: $font-color-gray;
+    color: $song-list-gray-font;
   }
   .artist{
     float: left;
@@ -106,7 +98,7 @@ export default {
   }
   span{
     font-size: $font-size-sm;
-    color: $font-color-gray;
+    color: $song-list-gray-font;
         }
       }
      }

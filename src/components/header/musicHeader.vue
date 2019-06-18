@@ -1,5 +1,5 @@
 <template>
-    <div class="m-header red-bc-color">
+    <div class="m-header red-bg-color">
       <svg class="icon icon-voice" aria-hidden="true">
         <use xlink:href="#icon-yuyin"></use>
       </svg>

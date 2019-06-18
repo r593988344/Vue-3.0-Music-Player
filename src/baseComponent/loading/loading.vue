@@ -28,7 +28,7 @@ export default {
     text-align: center;
     margin: 0 auto;
     font-size: $font-size-sm;
-    color: $font-color-gray;
+    color: $song-list-gray-font;
     img{
       padding-bottom: 5px;
       width: 50%;

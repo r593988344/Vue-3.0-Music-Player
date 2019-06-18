@@ -7,7 +7,7 @@
       :data="personalized">
       <div>
         <!--顶部红色背景-->
-        <div class="red-bc-color top-red"></div>
+        <div class="red-bg-color top-red"></div>
         <!--轮播图部分-->
         <div v-if="banner.length">
           <slider>
@@ -22,7 +22,7 @@
         <div class="guide-lists">
           <ul>
             <li @click="toDaily">
-              <div class="circle-bg red-bc-color">
+              <div class="circle-bg red-bg-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-rili"></use>
                 </svg>
@@ -30,7 +30,7 @@
               <span>每日推荐</span>
             </li>
             <li @click="toSongList">
-              <div class="circle-bg red-bc-color">
+              <div class="circle-bg red-bg-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-musicyinle"></use>
                 </svg>
@@ -38,7 +38,7 @@
               <span>歌单</span>
             </li>
             <li>
-              <div class="circle-bg red-bc-color">
+              <div class="circle-bg red-bg-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-paixingbang"></use>
                 </svg>
@@ -46,7 +46,7 @@
               <span>排行榜</span>
             </li>
             <li>
-              <div class="circle-bg red-bc-color">
+              <div class="circle-bg red-bg-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-faxian2"></use>
                 </svg>
@@ -54,7 +54,7 @@
               <span>电台</span>
             </li>
             <li>
-              <div class="circle-bg red-bc-color">
+              <div class="circle-bg red-bg-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-icon_zhibo-xian"></use>
                 </svg>

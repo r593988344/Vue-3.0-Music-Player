@@ -342,7 +342,7 @@ export default {
     i{
       font-size: $font-size-md;
       margin-left: 5px;
-      color: $font-color-gray;
+      color: $song-list-gray-font;
     }
   }
   .icon{

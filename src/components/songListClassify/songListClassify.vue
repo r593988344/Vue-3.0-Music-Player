@@ -88,7 +88,7 @@ export default {
     color: #000;
   }
   .tabs{
-    border-bottom: 1px solid $font-color-gray;
+    border-bottom: 1px solid $border-bottom-gray;
     overflow: hidden;
     margin-bottom: 10px;
     .active{

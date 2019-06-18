@@ -54,7 +54,7 @@ export default {
   mounted () {
     setTimeout(() => {
       this._initScroll()
-    }, 20)
+    }, this.refreshDelay)
   },
   methods: {
     _initScroll () {
@@ -103,15 +103,6 @@ export default {
       setTimeout(() => {
         this.refresh()
       }, this.refreshDelay)
-    },
-    scrollDisable () {
-      if (this.scrollDisable) {
-        setTimeout(() => {
-          this.disable()
-        }, this.refreshDelay)
-      } else {
-        this.enable()
-      }
     }
   }
 }

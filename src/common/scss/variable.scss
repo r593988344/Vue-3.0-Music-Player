@@ -10,11 +10,15 @@ $font-size-md: 14px;
 // 大字号
 $font-size-lg: 16px;
 // 灰色字体
-$font-color-gray: #d9d9d9;
-.red-bc-color{
+// 歌曲列表
+$song-list-gray-font: #afafaf;
+// 播放列表
+$play-list-gray-font: #898989;
+// 列表底部边框颜色
+$border-bottom-gray: #ededed;
+.red-bg-color{
   background-color: $background-r-color;
 }
-
 .text-ellipsis-one-line{
   overflow: hidden;
   white-space: nowrap;

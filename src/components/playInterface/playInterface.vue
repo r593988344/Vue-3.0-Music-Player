@@ -69,15 +69,35 @@
           </div>
         </div>
         <transition name="topSlide">
-          <div v-show="playListShow" class="playLists">
-            <ul>
-              <li v-for="(item,index) of playList" :key="index" class="text-ellipsis-one-line">{{item.name}}
-                <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
-              </li>
-            </ul>
+          <div v-if="playListShow" class="play-lists">
+            <div class="list-title">
+              <div class="title-left">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-faxian2"></use>
+                </svg>
+                <span>{{playMode}} ({{listNumber}})</span>
+              </div>
+              <div class="title-right">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-faxian2"></use>
+                </svg>
+                <span>收藏全部</span>
+                <svg class="icon clear-all" aria-hidden="true">
+                  <use xlink:href="#icon-faxian2"></use>
+                </svg>
+              </div>
+            </div>
+            <scroll :data="playList" class="scroll-container">
+              <ul>
+                <li v-for="(item,index) of playList" :key="index" class="text-ellipsis-one-line">{{item.name}}
+                  <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
+                </li>
+              </ul>
+            </scroll>
             <div class="close" @click="closePlayList">关闭</div>
           </div>
         </transition>
+        <div v-show="playListShow" class="play-list-mask" @click="closePlayList"></div>
       </div>
     </div>
   </transition>
@@ -86,12 +106,14 @@
 <script>
 import TopTitle from 'baseComponent/topTitle/topTitle'
 import { mapGetters, mapMutations } from 'vuex'
+import Scroll from 'baseComponent/scroll/scroll'
 export default {
   name: 'playInterface',
-  components: { TopTitle },
+  components: { Scroll, TopTitle },
   data () {
     return {
-      playListShow: false
+      playListShow: false,
+      playMode: '列表循环'
     }
   },
   methods: {
@@ -99,7 +121,6 @@ export default {
       this.playHide(false)
     },
     openPlayLists () {
-      console.log(this.playList)
       this.playListShow = true
     },
     closePlayList () {
@@ -124,6 +145,9 @@ export default {
         return ''
       }
     },
+    listNumber () {
+      return this.playList.length
+    },
     ...mapGetters(['songDetail', 'showPlay', 'playList'])
   }
 }
@@ -135,11 +159,16 @@ export default {
 .topSlide-enter-active, .topSlide-leave-active {
   transition: all 0.5s
 }
-.topSlide-enter {
+.topSlide-enter, .topSlide-leave-to {
   transform: translate3d(0, 100%, 0);
 }
-.topSlide-leave-to {
-  transform: translate3d(0, 100%, 0);
+.play-list-mask{
+  background-color: rgba(145,145,145,0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 99;
 }
 .play-song{
   position: fixed;
@@ -237,7 +266,7 @@ export default {
     bottom: 30px;
     left: 0;
   }
-  .playLists{
+  .play-lists{
     background-color: #ffffff;
     position: absolute;
     bottom: 0;
@@ -246,25 +275,68 @@ export default {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     text-align: left;
-    line-height: 30px;
+    line-height: 40px;
+    font-size: $font-size-md;
+    z-index: 999;
+    .list-title{
+      padding: 10px 0 10px 15px;
+      line-height: 20px;
+      border-bottom: 1px solid $border-bottom-gray;
+      display: flex;
+      justify-content: space-between;
+      >div{
+        display: flex;
+        align-items: center;
+        span{
+          padding: 0 5px;
+        }
+      }
+      .title-left{
+        width: auto;
+      }
+      .title-right{
+        width: auto;
+        padding-right: 15px;
+        span{
+          padding-right: 15px;
+          border-right: 1px solid $border-bottom-gray;
+        }
+        .clear-all{
+          margin-left: 15px;
+        }
+      }
+      .icon{
+        font-size: 20px;
+      }
+    }
+    ul{
+      /*padding-bottom: 114px;*/
+    }
     li{
-      border-bottom: 1px solid $font-color-gray;
-      font-size: $font-size-lg;
-      padding-left: 10px;
+      border-bottom: 1px solid $border-bottom-gray;
+      padding-left: 15px;
       span{
         font-size: $font-size-sm;
+        color: $play-list-gray-font;
       }
     }
     .close{
       text-align: center;
       line-height: 50px;
       position: absolute;
-      bottom: 10px;
+      bottom: 0;
       left: 0;
-      border-top: 1px solid $font-color-gray;
+      padding-bottom: 20px;
+      background-color: #ffffff;
+      border-top: 1px solid $border-bottom-gray;
     }
   }
+  .scroll-container{
+    height: calc(100% - 110px);
+    overflow: hidden;
+  }
 }
+
 @-webkit-keyframes rotation {
   from {
     -webkit-transform: rotate(0deg);
