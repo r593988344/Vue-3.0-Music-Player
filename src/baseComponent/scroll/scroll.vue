@@ -49,11 +49,19 @@ export default {
     pullUpLoad: {
       type: Boolean,
       default: false
+    },
+    scrollToSong: {
+      type: Number
     }
   },
   mounted () {
     setTimeout(() => {
       this._initScroll()
+      // 自动滚动到对应歌曲
+      if (this.scrollToSong) {
+        let nodeHeight = this.$refs.wrapper.children[0].children[0].offsetHeight
+        this.scrollTo(0, -nodeHeight * this.scrollToSong, 0)
+      }
     }, this.refreshDelay)
   },
   methods: {

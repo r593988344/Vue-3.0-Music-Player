@@ -8,9 +8,11 @@
         </ul>
       </Scroll>
     </div>
-    <scroll>
-      <song-group-list :songList="songList" :songPath="songPath"></song-group-list>
-    </scroll>
+    <div class="group-container">
+      <scroll>
+        <song-group-list :songList="songList" :songPath="songPath"></song-group-list>
+      </scroll>
+    </div>
     <transition name="slide">
       <router-view></router-view>
     </transition>
@@ -83,7 +85,9 @@ export default {
   .back-to {
     color: #000 !important;
   }
-
+  .group-container{
+    height: calc(100% - 86px) ;
+  }
   .title-scroll {
     color: #000;
   }
@@ -91,8 +95,9 @@ export default {
     border-bottom: 1px solid $border-bottom-gray;
     overflow: hidden;
     margin-bottom: 10px;
-    .active{
+    li.active{
       border-bottom: 2px solid $background-r-color;
+      color: $background-r-color !important;
     }
     ul{
       display: block;
@@ -106,9 +111,6 @@ export default {
         padding: 0 5px;
         line-height: 34px;
         margin: 0 10px;
-      }
-      li:nth-child(1){
-        color: $background-r-color;
       }
       li:nth-child(2){
         color: #ffb22e;

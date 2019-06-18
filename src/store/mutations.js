@@ -4,9 +4,6 @@ export default {
   [types.SET_MUSIC_LIST] (state, musicList) {
     state.musicList = musicList
   },
-  [types.SET_SONG_DETAIL] (state, songDetail) {
-    state.songDetail = songDetail
-  },
   [types.SHOW_PLAY] (state, showPlay) {
     state.showPlay = showPlay
   },
@@ -24,5 +21,10 @@ export default {
   },
   [types.SET_CURRENT_INDEX] (state, currentIndex) {
     state.currentIndex = currentIndex
+  },
+  [types.DEL_PLAY_LIST] (state, index) {
+    let list = Object.assign([], state.playList)
+    list.splice(index, 1)
+    state.playList = list
   }
 }

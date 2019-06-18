@@ -33,7 +33,7 @@
                 </div>
               </div>
               <div class="introduce">
-                <p class="title" ref="titleName">{{musicList.name}}</p>
+                <p class="title text-ellipsis-two-line" ref="titleName">{{musicList.name}}</p>
                 <div>
                   <img class="sm-icon" :src="avatarUrl" alt="">
                   <span class="text-ellipsis-one-line">{{nickname}}</span>
@@ -69,7 +69,7 @@
             </div>
           </div>
           <!--          歌曲列表-->
-          <song-list :songLists="songLists">
+          <song-list :songLists="songLists" @selectSong="selectSong">
             <div v-show="!playTopShow"  class="play" ref="play">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
@@ -84,7 +84,7 @@
 
 <script>
 import { getPersonalizedDetail, getDailySong } from 'common/api/discover'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
@@ -172,14 +172,27 @@ export default {
           }
         })
       }
-    }
+    },
+    selectSong (item, index) {
+      this.selectPlay({ list: this.songLists, index: index })
+      this.showPlay(true)
+    },
+    ...mapMutations({
+      showPlay: 'SHOW_PLAY',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
+    }),
+    ...mapActions([
+      'selectPlay'
+    ]
+    )
   },
   computed: {
     bgStyle () {
       return `background-image: url(${this.musicList.picUrl || this.musicList.coverImgUrl})`
     },
     ...mapGetters([
-      'musicList'
+      'musicList',
+      'songListId'
     ])
   }
 }
@@ -280,6 +293,7 @@ export default {
         position: relative;
         div{
           height: 30px;
+          margin: 15px 0;
         }
         img{
           width: 30px;
@@ -309,8 +323,6 @@ export default {
           margin-top: 0;
         }
         .description{
-          position: absolute;
-          bottom: 0;
           line-height: 18px;
           margin: 0;
           padding-right: 15px;

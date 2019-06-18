@@ -14,8 +14,8 @@
       <div class="play-container">
         <div class="container">
           <div class="play-circle">
-            <img src="~common/image/disc.png" alt="">
             <img class="bg-img" :src="circleImg">
+            <img v-if="!circleImg" class="bg-img" src="~common/image/disc.png">
           </div>
         </div>
         <div class="contain-bottom">
@@ -82,15 +82,20 @@
                   <use xlink:href="#icon-faxian2"></use>
                 </svg>
                 <span>收藏全部</span>
-                <svg class="icon clear-all" aria-hidden="true">
+                <svg class="icon clear-all" aria-hidden="true" @click="_clearAll">
                   <use xlink:href="#icon-faxian2"></use>
                 </svg>
               </div>
             </div>
-            <scroll :data="playList" class="scroll-container">
+            <scroll :data="playList" :scrollToSong="currentIndex" class="scroll-container">
               <ul>
-                <li v-for="(item,index) of playList" :key="index" class="text-ellipsis-one-line">{{item.name}}
+                <li v-for="(item,index) of playList" :key="index" class="text-ellipsis-one-line" :class="{redColor:index === currentIndex}" ref="playList">
+                  <svg v-if="index === currentIndex" class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-faxian2"></use>
+                  </svg>
+                  {{item.name}}
                   <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
+                  <i @click="deleteSong(index)">删除</i>
                 </li>
               </ul>
             </scroll>
@@ -107,14 +112,19 @@
 import TopTitle from 'baseComponent/topTitle/topTitle'
 import { mapGetters, mapMutations } from 'vuex'
 import Scroll from 'baseComponent/scroll/scroll'
+import { getSong } from 'common/api/discover'
+import { ERR_OK } from 'common/js/config'
 export default {
   name: 'playInterface',
   components: { Scroll, TopTitle },
   data () {
     return {
       playListShow: false,
-      playMode: '列表循环'
+      playMode: '列表循环',
+      songDetail: {}
     }
+  },
+  mounted () {
   },
   methods: {
     back () {
@@ -126,14 +136,30 @@ export default {
     closePlayList () {
       this.playListShow = false
     },
+    deleteSong (index) {
+      this.deletePlayList(index)
+    },
+    _clearAll () {
+      this.clearAll([])
+    },
+    _getSong () {
+      this.songId = this.playList[this.currentIndex].id
+      getSong([this.songId]).then(res => {
+        if (res.data.code === ERR_OK) {
+          this.songDetail = res.data.songs[0]
+        }
+      })
+    },
     ...mapMutations({
-      playHide: 'SHOW_PLAY'
+      playHide: 'SHOW_PLAY',
+      deletePlayList: 'DEL_PLAY_LIST',
+      clearAll: 'SET_PLAY_LIST'
     })
   },
   computed: {
     bgStyle () {
       if (this.songDetail.al) {
-        return `background-image: url(${this.songDetail.al.picUrl})`
+        return `background-image: url(${this.circleImg})`
       } else {
         return 'background-image: url("")'
       }
@@ -141,14 +167,19 @@ export default {
     circleImg () {
       if (this.songDetail.al) {
         return this.songDetail.al.picUrl
-      } else {
-        return ''
       }
     },
     listNumber () {
       return this.playList.length
     },
-    ...mapGetters(['songDetail', 'showPlay', 'playList'])
+    ...mapGetters(['showPlay', 'playList', 'currentIndex'])
+  },
+  watch: {
+    currentIndex () {
+      setTimeout(() => {
+        this._getSong()
+      }, 600)
+    }
   }
 }
 </script>
@@ -186,6 +217,8 @@ export default {
     background-position:center top;
     -webkit-filter: blur(30px); /* Chrome, Safari, Opera */
     filter: blur(30px);
+    transition: all 1.5s;
+    animation: ease-in-out 1.5s;
   }
   .mask{
     height: 100%;
@@ -314,10 +347,16 @@ export default {
     }
     li{
       border-bottom: 1px solid $border-bottom-gray;
-      padding-left: 15px;
+      margin-left: 15px;
+      position: relative;
+      padding-right: 20%;
       span{
         font-size: $font-size-sm;
         color: $play-list-gray-font;
+      }
+      i{
+        position: absolute;
+        right: 10px;
       }
     }
     .close{
@@ -334,6 +373,9 @@ export default {
   .scroll-container{
     height: calc(100% - 110px);
     overflow: hidden;
+    .redColor{
+      color: $background-r-color;
+    }
   }
 }
 

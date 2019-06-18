@@ -25,12 +25,13 @@
 
 <script>
 import Loading from '../loading/loading'
-import { getSong } from 'common/api/discover'
-import { ERR_OK } from 'common/js/config'
-import { mapMutations, mapActions } from 'vuex'
 export default {
   name: 'songList',
   components: { Loading },
+  data () {
+    return {
+    }
+  },
   props: {
     songLists: {
       type: Array
@@ -41,26 +42,8 @@ export default {
   },
   methods: {
     playSong (item, index) {
-      this.selectPlay({ list: this.songLists, index: index })
-      this._getSong(item.id)
-    },
-    _getSong (ids) {
-      getSong([ids]).then(res => {
-        if (res.data.code === ERR_OK) {
-          let songDetail = res.data.songs[0]
-          this.setSongDetail(songDetail)
-          this.showPlay(true)
-        }
-      })
-    },
-    ...mapMutations({
-      setSongDetail: 'SET_SONG_DETAIL',
-      showPlay: 'SHOW_PLAY'
-    }),
-    ...mapActions([
-      'selectPlay'
-    ]
-    )
+      this.$emit('selectSong', item, index)
+    }
   }
 }
 </script>
@@ -80,6 +63,7 @@ export default {
     padding: 0 15px;
     overflow: hidden;
     background-color: #ffffff;
+    padding-bottom: 40px;
   .song{
     height: 40px;
     margin: 20px 0;
@@ -87,12 +71,14 @@ export default {
     float: left;
     display: inline-block;
     line-height: 40px;
+    width: 18px;
     color: $song-list-gray-font;
+    text-align: center;
   }
   .artist{
     float: left;
     width: 90%;
-    padding-left: 14px;
+    padding-left: 10px;
   p{
     font-size: $font-size-lg;
   }
