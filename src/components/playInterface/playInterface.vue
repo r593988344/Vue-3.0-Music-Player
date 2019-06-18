@@ -14,8 +14,8 @@
       <div class="play-container">
         <div class="container">
           <div class="play-circle">
-            <img class="bg-img" :src="circleImg">
-            <img v-if="!circleImg" class="bg-img" src="~common/image/disc.png">
+            <img class="bg-img" :class="{rotation: !playing}" :src="circleImg">
+            <img v-if="!circleImg" :class="{rotation: !playing}" class="bg-img" src="~common/image/disc.png">
           </div>
         </div>
         <div class="contain-bottom">
@@ -52,12 +52,12 @@
               <use xlink:href="#icon-faxian2"></use>
             </svg>
           </div>
-          <div>
+          <div @click="togglePlaying">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-faxian2"></use>
             </svg>
           </div>
-          <div>
+          <div @click="nextSong">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-faxian2"></use>
             </svg>
@@ -104,6 +104,7 @@
         </transition>
         <div v-show="playListShow" class="play-list-mask" @click="closePlayList"></div>
       </div>
+      <audio autoplay :src="currentSongUrl" ref="audio" @ended="end" @canplay="ready"></audio>
     </div>
   </transition>
 </template>
@@ -112,7 +113,7 @@
 import TopTitle from 'baseComponent/topTitle/topTitle'
 import { mapGetters, mapMutations } from 'vuex'
 import Scroll from 'baseComponent/scroll/scroll'
-import { getSong } from 'common/api/discover'
+import { getSong, getSongUrl } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
 export default {
   name: 'playInterface',
@@ -121,7 +122,9 @@ export default {
     return {
       playListShow: false,
       playMode: '列表循环',
-      songDetail: {}
+      songDetail: {},
+      currentSongUrl: '',
+      songReady: false
     }
   },
   mounted () {
@@ -138,22 +141,70 @@ export default {
     },
     deleteSong (index) {
       this.deletePlayList(index)
+      this.$refs.audio.pause()
     },
     _clearAll () {
       this.clearAll([])
     },
     _getSong () {
-      this.songId = this.playList[this.currentIndex].id
+      this.songId = this.currentSongId
       getSong([this.songId]).then(res => {
         if (res.data.code === ERR_OK) {
           this.songDetail = res.data.songs[0]
         }
       })
     },
+    _getSongUrl (id) {
+      getSongUrl(id).then(res => {
+        if (res.data.code === ERR_OK) {
+          this.currentSongUrl = res.data.data[0].url
+        }
+      })
+    },
+    togglePlaying () {
+      const audio = this.$refs.audio
+      this.setPlaying(!this.playing)
+      this.playing ? audio.play() : audio.pause()
+      /* if (this.currentLyric) {
+        this.currentLyric.togglePlay()
+      }*/
+    },
+    ready () {
+      console.log('ready')
+      this.songReady = true
+    },
+    // 播放结束自动下一首歌
+    end () {
+      this.nextSong()
+    },
+    loop () {
+      this.$refs.audio.play()
+    },
+    nextSong () {
+      if (!this.songReady) {
+        return
+      }
+      if (this.playList.length === 1) {
+        this.loop()
+        return
+      } else {
+        let index = this.currentIndex + 1
+        if (index === this.playList.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+          this.togglePlaying()
+        }
+      }
+      this.songReady = false
+    },
     ...mapMutations({
       playHide: 'SHOW_PLAY',
       deletePlayList: 'DEL_PLAY_LIST',
-      clearAll: 'SET_PLAY_LIST'
+      clearAll: 'SET_PLAY_LIST',
+      setPlaying: 'SET_PLAYING',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     })
   },
   computed: {
@@ -172,10 +223,11 @@ export default {
     listNumber () {
       return this.playList.length
     },
-    ...mapGetters(['showPlay', 'playList', 'currentIndex'])
+    ...mapGetters(['showPlay', 'playList', 'currentIndex', 'currentSongId', 'playing'])
   },
   watch: {
     currentIndex () {
+      this._getSongUrl(this.currentSongId)
       setTimeout(() => {
         this._getSong()
       }, 600)
@@ -282,7 +334,10 @@ export default {
       border-radius: 50%;
       border: 3px solid rgba(185, 185, 185, 0.44);
       transform: rotate(360deg);
-      animation: rotation 8s linear infinite;;
+      animation: rotation 8s linear infinite;
+    }
+    img.rotation{
+      animation-play-state: paused;
     }
     .bg-img{
       position: absolute;

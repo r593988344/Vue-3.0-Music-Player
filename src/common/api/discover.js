@@ -51,3 +51,8 @@ export function getSong (ids) {
   })
   return axios.get(url)
 }
+// 获取歌曲播放url
+export function getSongUrl (id) {
+  let url = Host + '/music/url?id=' + id
+  return axios.get(url)
+}

@@ -74,7 +74,7 @@
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
               </svg>
-              <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
+              <span class="play-all" @click="playAll">播放全部 <i>(共{{trackCount}}首)</i></span>
             </div>
           </song-list>
         </div>
@@ -176,6 +176,9 @@ export default {
     selectSong (item, index) {
       this.selectPlay({ list: this.songLists, index: index })
       this.showPlay(true)
+    },
+    playAll () {
+      this.selectPlay({ list: this.songLists, index: 0 })
     },
     ...mapMutations({
       showPlay: 'SHOW_PLAY',
