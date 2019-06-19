@@ -1,5 +1,6 @@
+@import "~common/scss/variable.scss";
 .router-music-list{
-  height: calc(100% - 64px);
+  height: calc(100% - 66px);
   width: 100%;
   position: fixed;
   top: 0;
@@ -7,6 +8,41 @@
   z-index: 99;
   background-color: #ffffff;
   overflow: hidden;
+  .wrapper{
+    height: calc(100% - 60px);
+    overflow: hidden;
+  }
+  .flex-contain{
+    padding-bottom: 66px;
+  }
+  .playTop{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  .play{
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background-color: #ffffff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    .play-all{
+      font-size: $font-size-lg;
+      font-weight: bold;
+      padding-left: 10px;
+      line-height: 40px;
+      display: flex;
+      align-items: center;
+    }
+    .icon{
+      font-size: 20px;
+      border: 1px solid #000;
+      border-radius: 13px;
+      float: left;
+    }
+  }
 }
 .slide-enter-active, .slide-leave-active {
   transition: all 0.5s

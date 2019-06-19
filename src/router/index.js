@@ -8,6 +8,8 @@ const MusicVideos = () => import(/* webpackChunkName: "group-foo" */ '@/componen
 const MusicList = () => import(/* webpackChunkName: "group-foo" */ '@/components/musicList/musicList')
 const DailySong = () => import(/* webpackChunkName: "group-foo" */ '@/components/dailySong/dailySong')
 const SongListClassify = () => import(/* webpackChunkName: "group-foo" */ '@/components/songListClassify/songListClassify')
+const RankingList = () => import(/* webpackChunkName: "group-foo" */ '@/components/rankingList/rankingList')
+const RankDetail = () => import(/* webpackChunkName: "group-foo" */ '@/components/rankDetail/rankDetail')
 Vue.use(Router)
 
 export default new Router({
@@ -24,6 +26,20 @@ export default new Router({
         {
           path: 'dailySong',
           component: DailySong
+        },
+        {
+          path: 'rankingList',
+          component: RankingList,
+          children: [
+            {
+              path: 'rankDetail',
+              component: RankDetail
+            },
+            {
+              path: ':id',
+              component: MusicList
+            }
+          ]
         },
         {
           path: 'songListClassify',

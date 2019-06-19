@@ -51,3 +51,8 @@ export function getSong (ids) {
   })
   return axios.get(url)
 }
+// 所有榜单
+export function getRankListDetail () {
+  let url = Host + '/toplist/detail'
+  return axios.get(url)
+}

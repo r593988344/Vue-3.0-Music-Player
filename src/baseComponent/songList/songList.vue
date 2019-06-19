@@ -5,7 +5,9 @@
     <div class="songs">
       <div>
         <div v-for="(item, index) of songLists" :key="index" class="song" @click="playSong(item, index)">
-          <i>{{index+1}}</i>
+          <div class="sorts" :class="{top3:rank && index < 3, ranks:rank}">
+            <p><span v-if="rank && index < 9">0</span>{{index+1}}</p>
+          </div>
           <div class="artist">
             <p class="text-ellipsis-one-line">{{item.name}}</p>
             <p class="text-ellipsis-one-line">
@@ -25,6 +27,8 @@
 
 <script>
 import Loading from '../loading/loading'
+import { mapActions, mapMutations } from 'vuex'
+
 export default {
   name: 'songList',
   components: { Loading },
@@ -38,12 +42,24 @@ export default {
     },
     playTopShow: {
       type: Boolean
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     playSong (item, index) {
-      this.$emit('selectSong', item, index)
-    }
+      this.selectPlay({ list: this.songLists, index: index })
+      this.showPlay(true)
+    },
+    ...mapActions([
+      'selectPlay'
+    ]),
+    ...mapMutations({
+      showPlay: 'SHOW_PLAY',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
+    })
   }
 }
 </script>
@@ -67,13 +83,16 @@ export default {
   .song{
     height: 40px;
     margin: 20px 0;
-  i{
+  .sorts{
     float: left;
     display: inline-block;
     line-height: 40px;
-    width: 18px;
+    width: 24px;
     color: $song-list-gray-font;
     text-align: center;
+    &.top3{
+      color: $background-r-color;
+    }
   }
   .artist{
     float: left;
