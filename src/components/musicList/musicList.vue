@@ -69,12 +69,12 @@
             </div>
           </div>
           <!--          歌曲列表-->
-          <song-list :songLists="songLists" @selectSong="selectSong">
+          <song-list :songLists="songLists">
             <div v-show="!playTopShow"  class="play" ref="play">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
               </svg>
-              <span class="play-all" @click="playAll">播放全部 <i>(共{{trackCount}}首)</i></span>
+              <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
             </div>
           </song-list>
         </div>
@@ -84,7 +84,7 @@
 
 <script>
 import { getPersonalizedDetail, getDailySong } from 'common/api/discover'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
@@ -205,10 +205,6 @@ export default {
 @import "~common/scss/variable.scss";
 @import "~common/scss/common.scss";
 .router-music-list{
-    .song-list-scroll{
-      height: calc(100% - 60px);
-      overflow: hidden;
-    }
     .bg-img{
       position: fixed;
       height: 260px;
@@ -235,10 +231,6 @@ export default {
         background-size:cover;
         background-position:center top;
       }
-    }
-    .wrapper{
-      height: calc(100% - 60px);
-      overflow: hidden;
     }
     .business-card{
       color: #ffffff;
@@ -333,38 +325,5 @@ export default {
         }
       }
     }
-    .playTop{
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-    }
   }
-.play{
-  height: 40px;
-  line-height: 40px;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  background-color: #ffffff;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  .play-all{
-    font-size: $font-size-lg;
-    font-weight: bold;
-    padding-left: 10px;
-    line-height: 40px;
-    display: flex;
-    align-items: center;
-    i{
-      font-size: $font-size-md;
-      margin-left: 5px;
-      color: $song-list-gray-font;
-    }
-  }
-  .icon{
-    font-size: 20px;
-    border: 1px solid #000;
-    border-radius: 13px;
-    float: left;
-  }
-}
 </style>

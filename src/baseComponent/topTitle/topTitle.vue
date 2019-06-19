@@ -33,6 +33,8 @@ export default {
     color: #ffffff;
     position: relative;
   .back{
+    text-align: left;
+    padding-left: 15px;
     float: left;
     width: 20%;
   }

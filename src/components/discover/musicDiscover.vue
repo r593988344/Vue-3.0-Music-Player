@@ -37,7 +37,7 @@
               </div>
               <span>歌单</span>
             </li>
-            <li>
+            <li @click="toRankingList">
               <div class="circle-bg red-bg-color">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-paixingbang"></use>
@@ -144,6 +144,9 @@ export default {
     },
     toSongList () {
       this.$router.push('/musicDiscover/songListClassify')
+    },
+    toRankingList () {
+      this.$router.push('/musicDiscover/rankingList')
     }
   }
 }
