@@ -253,7 +253,12 @@ export default {
   },
   watch: {
     currentIndex () {
+      const audio = this.$refs.audio
       this._getSongUrl(this.currentSongId)
+      if (this.songReady) {
+        audio.play()
+        this.songReady = false
+      }
       setTimeout(() => {
         this._getSong()
       }, 600)
