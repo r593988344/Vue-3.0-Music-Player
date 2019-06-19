@@ -6,7 +6,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-z"></use>
         </svg>
-        <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
+        <span class="play-all" @click="playAll">播放全部 <i>(共{{trackCount}}首)</i></span>
       </div>
       <!--      背景虚化-->
       <div class="bg-img" ref="bgImg">
@@ -74,7 +74,7 @@
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
               </svg>
-              <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
+              <span class="play-all" @click="playAll">播放全部 <i>(共{{trackCount}}首)</i></span>
             </div>
           </song-list>
         </div>
@@ -84,7 +84,7 @@
 
 <script>
 import { getPersonalizedDetail, getDailySong } from 'common/api/discover'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
@@ -173,21 +173,12 @@ export default {
         })
       }
     },
-    selectSong (item, index) {
-      this.selectPlay({ list: this.songLists, index: index })
-      this.showPlay(true)
-    },
     playAll () {
       this.selectPlay({ list: this.songLists, index: 0 })
     },
-    ...mapMutations({
-      showPlay: 'SHOW_PLAY',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
-    }),
     ...mapActions([
       'selectPlay'
-    ]
-    )
+    ])
   },
   computed: {
     bgStyle () {

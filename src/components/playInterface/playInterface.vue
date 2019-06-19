@@ -21,22 +21,22 @@
         <div class="contain-bottom">
           <div>
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-xihuan"></use>
             </svg>
           </div>
           <div>
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-iconset0425"></use>
             </svg>
           </div>
           <div>
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-pinglun"></use>
             </svg>
           </div>
           <div>
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-gengduoxiao"></use>
             </svg>
           </div>
         </div>
@@ -44,27 +44,27 @@
         <div class="actions">
           <div>
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-suijibofang"></use>
             </svg>
           </div>
-          <div>
+          <div @click="preSong">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-shangyishoushangyige"></use>
             </svg>
           </div>
-          <div @click="togglePlaying">
+          <div @click="togglePlaying" class="playing">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use :xlink:href="playIco"></use>
             </svg>
           </div>
           <div @click="nextSong">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-xiayigexiayishou"></use>
             </svg>
           </div>
           <div @click="openPlayLists">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-faxian2"></use>
+              <use xlink:href="#icon-gengduo"></use>
             </svg>
           </div>
         </div>
@@ -73,23 +73,24 @@
             <div class="list-title">
               <div class="title-left">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-faxian2"></use>
+                  <use xlink:href="#icon-xunhuanbofang"></use>
                 </svg>
                 <span>{{playMode}} ({{listNumber}})</span>
               </div>
               <div class="title-right">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-faxian2"></use>
+                  <use xlink:href="#icon-shoucang"></use>
                 </svg>
                 <span>收藏全部</span>
                 <svg class="icon clear-all" aria-hidden="true" @click="_clearAll">
-                  <use xlink:href="#icon-faxian2"></use>
+                  <use xlink:href="#icon-lajitong"></use>
                 </svg>
               </div>
             </div>
             <scroll :data="playList" :scrollToSong="currentIndex" class="scroll-container">
               <ul>
-                <li v-for="(item,index) of playList" :key="index" class="text-ellipsis-one-line" :class="{redColor:index === currentIndex}" ref="playList">
+                <li class="text-ellipsis-one-line" :class="{redColor:index === currentIndex}"
+                    v-for="(item,index) of playList" :key="index" ref="playList">
                   <svg v-if="index === currentIndex" class="icon" aria-hidden="true">
                     <use xlink:href="#icon-faxian2"></use>
                   </svg>
@@ -115,6 +116,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import Scroll from 'baseComponent/scroll/scroll'
 import { getSong, getSongUrl } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
+
 export default {
   name: 'playInterface',
   components: { Scroll, TopTitle },
@@ -124,7 +126,8 @@ export default {
       playMode: '列表循环',
       songDetail: {},
       currentSongUrl: '',
-      songReady: false
+      songReady: false,
+      playIco: '#icon-bofang'
     }
   },
   mounted () {
@@ -141,7 +144,12 @@ export default {
     },
     deleteSong (index) {
       this.deletePlayList(index)
-      this.$refs.audio.pause()
+      if (index === this.currentIndex) {
+        this._getSongUrl(this.currentSongId)
+        this._getSong()
+      } else if (index < this.currentIndex) {
+        this.setCurrentIndex(index - 1)
+      }
     },
     _clearAll () {
       this.clearAll([])
@@ -165,12 +173,8 @@ export default {
       const audio = this.$refs.audio
       this.setPlaying(!this.playing)
       this.playing ? audio.play() : audio.pause()
-      /* if (this.currentLyric) {
-        this.currentLyric.togglePlay()
-      }*/
     },
     ready () {
-      console.log('ready')
       this.songReady = true
     },
     // 播放结束自动下一首歌
@@ -198,6 +202,28 @@ export default {
         }
       }
       this.songReady = false
+    },
+    preSong () {
+      if (!this.songReady) {
+        return
+      }
+      if (this.playList.length === 1) {
+        this.loop()
+        return
+      } else {
+        let index = this.currentIndex - 1
+        if (index < 0) {
+          index = this.playList.length - 1
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+          this.togglePlaying()
+        }
+      }
+      this.songReady = false
+    },
+    playSong (index) {
+      this.setCurrentIndex(index)
     },
     ...mapMutations({
       playHide: 'SHOW_PLAY',
@@ -231,6 +257,13 @@ export default {
       setTimeout(() => {
         this._getSong()
       }, 600)
+    },
+    playing () {
+      if (this.playing) {
+        this.playIco = '#icon-suspend_icon'
+      } else {
+        this.playIco = '#icon-bofang'
+      }
     }
   }
 }
@@ -322,7 +355,7 @@ export default {
     display: flex;
     justify-content: space-around;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 24px;
     align-items: center;
   }
   .play-circle{
@@ -349,10 +382,14 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    font-size: 30px;
+    font-size: 26px;
     position: absolute;
     bottom: 30px;
     left: 0;
+    color: #ffffff;
+    .playing{
+      font-size: 50px;
+    }
   }
   .play-lists{
     background-color: #ffffff;

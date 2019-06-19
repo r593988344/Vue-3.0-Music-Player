@@ -38,7 +38,7 @@
           <div class="recommend-list global-list">
             <div class="title">全球榜</div>
             <div class="recommend">
-              <div class="rank" v-for="(item,index) of globalList" :key="index">
+              <div class="rank" v-for="(item,index) of globalList" :key="index" @click="moreRanks(item)">
                 <div class="rank-img">
                   <div class="img">
                     <img :src="item.coverImgUrl" alt="">
@@ -54,7 +54,7 @@
           <div class="recommend-list more-list">
             <div class="title">更多榜单</div>
             <div class="recommend">
-              <div class="rank" v-for="(item,index) of moreList" :key="index">
+              <div class="rank" v-for="(item,index) of moreList" :key="index" @click="moreRanks(item)">
                 <div class="rank-img">
                   <div class="img">
                     <img :src="item.coverImgUrl" alt="">
@@ -81,6 +81,9 @@ import { getRankListDetail } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
 import Scroll from 'baseComponent/scroll/scroll'
 import { mapMutations } from 'vuex'
+// 转换播放量单位
+import { playExchange } from 'common/js/playExchange'
+
 export default {
   name: 'rankingList',
   components: { Scroll, TopTitle },
@@ -103,6 +106,9 @@ export default {
     this._getRankListDetail()
   },
   methods: {
+    _playExChange (item) {
+      item.playCount = playExchange(item.playCount)
+    },
     _getRankListDetail () {
       getRankListDetail().then(res => {
         if (res.data.code === ERR_OK) {
@@ -119,8 +125,10 @@ export default {
       this.setMusicList(item)
     },
     moreRanks (item) {
-      this.$router.push(`/musicDiscover/rankingList/${item.id}`)
-      this.setMusicList(item)
+      let musicList = JSON.parse(JSON.stringify(item))
+      this._playExChange(musicList)
+      this.$router.push(`/musicDiscover/rankingList/${musicList.id}`)
+      this.setMusicList(musicList)
     },
     // 将获取到的标题数据存入store
     ...mapMutations({

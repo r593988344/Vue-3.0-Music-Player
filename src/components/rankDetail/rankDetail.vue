@@ -7,7 +7,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-z"></use>
         </svg>
-        <span class="play-all">播放全部<i>(共{{trackCount}}首)</i></span>
+        <span class="play-all" @click="playAll">播放全部<i>(共{{trackCount}}首)</i></span>
       </div>
       <!--      头部背景-->
       <div class="bg-img" ref="bgImg">
@@ -29,7 +29,7 @@
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-z"></use>
               </svg>
-              <span class="play-all">播放全部<i>(共{{trackCount}}首)</i></span>
+              <span class="play-all" @click="playAll">播放全部<i>(共{{trackCount}}首)</i></span>
             </div>
           </song-list>
         </div>
@@ -44,7 +44,7 @@ import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
 import TopTitle from 'baseComponent/topTitle/topTitle'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'dailySong',
   components: {
@@ -99,7 +99,13 @@ export default {
           this.trackCount = res.data.result.trackCount
         }
       })
-    }
+    },
+    playAll () {
+      this.selectPlay({ list: this.songLists, index: 0 })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   computed: {
     ...mapGetters([
