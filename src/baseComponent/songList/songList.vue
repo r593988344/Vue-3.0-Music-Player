@@ -67,20 +67,23 @@ export default {
 <style lang="scss" scoped>
   @import "~common/scss/variable.scss";
   .loading-container{
-    position: relative;
+    position: absolute;
     background-color: #ffffff;
+    top: 60px;
+    left: 0;
   }
   .song-list{
     min-height: 100%;
     height: auto;
     overflow: hidden;
+    position: relative;
   .songs{
     height: 100%;
     text-align: left;
     padding: 0 10px;
     overflow: hidden;
     background-color: #ffffff;
-    /*padding-bottom: 40px;*/
+    min-height: 100px;
   .song{
     height: 40px;
     margin: 10px 0;

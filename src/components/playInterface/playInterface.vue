@@ -92,7 +92,7 @@
                   </svg>
                   {{item.name}}
                   <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
-                  <i @click="deleteSong(index)">
+                  <i @click.stop="deleteSong(index)">
                     <svg class="icon cancel" aria-hidden="true">
                       <use xlink:href="#icon-cancel-1-copy"></use>
                     </svg>
@@ -141,11 +141,7 @@ export default {
     this.$refs.audio.currentTime = 0
   },
   methods: {
-    onload () {
-      console.log('onload')
-    },
     firstPlay () {
-      console.log('firstPlay')
       this.$refs.audio.play()
     },
     back () {
@@ -158,13 +154,12 @@ export default {
       this.playListShow = false
     },
     deleteSong (index) {
-      event.stopPropagation()
       this.deletePlayList(index)
       if (index === this.currentIndex) {
         this._getSongUrl(this.currentSong.id)
         this._getSong()
       } else if (index < this.currentIndex) {
-        this.setCurrentIndex(index)
+        this.setCurrentIndex(this.currentIndex - 1)
       }
     },
     timeupdate (e) {
