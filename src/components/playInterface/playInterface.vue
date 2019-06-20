@@ -1,64 +1,67 @@
 <template>
-  <transition name="slide">
-    <div v-show="showPlay" class="play-song">
+  <transition name="fade">
+    <div v-show="showPlay" class="play-song" @touchstart.once="firstPlay">
       <top-title :titleName="songDetail.name" @back="back"></top-title>
-      <div class="play-bg" :style="bgStyle"></div>
+      <div class="play-bg">
+        <img :src="circleImg" alt="">
+      </div>
       <div class="mask"></div>
       <div class="play-container">
         <div class="container">
           <div class="play-circle">
             <img class="bg-img" :class="{rotation: !playing}" :src="circleImg">
-            <img v-if="!circleImg" :class="{rotation: !playing}" class="bg-img" src="~common/image/disc.png">
           </div>
         </div>
-        <div class="contain-bottom">
-          <div>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-xihuan"></use>
-            </svg>
+        <div class="player-control">
+          <div class="contain-bottom">
+            <div>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-xihuan"></use>
+              </svg>
+            </div>
+            <div>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-iconset0425"></use>
+              </svg>
+            </div>
+            <div>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-pinglun"></use>
+              </svg>
+            </div>
+            <div>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-gengduoxiao"></use>
+              </svg>
+            </div>
           </div>
-          <div>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-iconset0425"></use>
-            </svg>
-          </div>
-          <div>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-pinglun"></use>
-            </svg>
-          </div>
-          <div>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-gengduoxiao"></use>
-            </svg>
-          </div>
-        </div>
-        <div class="progress"></div>
-        <div class="actions">
-          <div>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-suijibofang"></use>
-            </svg>
-          </div>
-          <div @click="preSong">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-shangyishoushangyige"></use>
-            </svg>
-          </div>
-          <div @click="togglePlaying" class="playing">
-            <svg class="icon" aria-hidden="true">
-              <use :xlink:href="playIco"></use>
-            </svg>
-          </div>
-          <div @click="nextSong">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-xiayigexiayishou"></use>
-            </svg>
-          </div>
-          <div @click="openPlayLists">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-gengduo"></use>
-            </svg>
+          <progress-bar :currentTime="currentTime"></progress-bar>
+          <div class="actions">
+            <div>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-suijibofang"></use>
+              </svg>
+            </div>
+            <div @click="preSong">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-shangyishoushangyige"></use>
+              </svg>
+            </div>
+            <div @click="togglePlaying" class="playing">
+              <svg class="icon" aria-hidden="true">
+                <use :xlink:href="playIco"></use>
+              </svg>
+            </div>
+            <div @click="nextSong">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-xiayigexiayishou"></use>
+              </svg>
+            </div>
+            <div @click="openPlayLists">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-gengduo"></use>
+              </svg>
+            </div>
           </div>
         </div>
         <transition name="topSlide">
@@ -102,7 +105,7 @@
         </transition>
         <div v-show="playListShow" class="play-list-mask" @click="closePlayList"></div>
       </div>
-      <audio id="music-audio" autoplay preload="auto" :src="currentSongUrl" ref="audio" @error="error" @ended="end" @canplay="ready"></audio>
+      <audio id="music-audio" autoplay preload="auto" ref="audio" @error="error" @ended="end" @canplay="ready" @timeupdate="timeupdate"></audio>
     </div>
   </transition>
 </template>
@@ -113,10 +116,11 @@ import { mapGetters, mapMutations } from 'vuex'
 import Scroll from 'baseComponent/scroll/scroll'
 import { getSong, getSongUrl } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
+import ProgressBar from 'baseComponent/progressBar/progressBar'
 
 export default {
   name: 'playInterface',
-  components: { Scroll, TopTitle },
+  components: { Scroll, TopTitle, ProgressBar },
   data () {
     return {
       playListShow: false,
@@ -125,7 +129,11 @@ export default {
       currentSongUrl: '',
       songReady: false,
       // 默认播放状态
-      playIco: '#icon-bofang'
+      playIco: '#icon-bofang',
+      // 播放进度
+      currentTime: 0,
+      // 歌曲总时长
+      duration: 0
     }
   },
   mounted () {
@@ -133,6 +141,13 @@ export default {
     this.$refs.audio.currentTime = 0
   },
   methods: {
+    onload () {
+      console.log('onload')
+    },
+    firstPlay () {
+      console.log('firstPlay')
+      this.$refs.audio.play()
+    },
     back () {
       this.playHide(false)
     },
@@ -152,6 +167,9 @@ export default {
         this.setCurrentIndex(index)
       }
     },
+    timeupdate (e) {
+      this.currentTime = e.target.currentTime
+    },
     _clearAll () {
       this.clearAll([])
     },
@@ -167,16 +185,16 @@ export default {
       getSongUrl(id).then(res => {
         if (res.data.code === ERR_OK) {
           this.currentSongUrl = res.data.data[0].url
-          setTimeout(() => {
-            const audio = this.$refs.audio
-            if (this.playing) {
-              audio.play()
-              this.playIco = '#icon-suspend_icon'
-            } else {
-              audio.pause()
-              this.playIco = '#icon-bofang'
-            }
-          }, 20)
+          const audio = this.$refs.audio
+          audio.src = this.currentSongUrl
+          this.duration = this.$refs.audio.duration
+          if (this.playing) {
+            audio.play()
+            this.playIco = '#icon-suspend_icon'
+          } else {
+            audio.pause()
+            this.playIco = '#icon-bofang'
+          }
         }
       })
     },
@@ -252,13 +270,6 @@ export default {
     })
   },
   computed: {
-    bgStyle () {
-      if (this.songDetail.al) {
-        return `background-image: url(${this.circleImg})`
-      } else {
-        return 'background-image: url("")'
-      }
-    },
     circleImg () {
       if (this.songDetail.al) {
         return this.songDetail.al.picUrl
@@ -303,6 +314,16 @@ export default {
 .topSlide-enter, .topSlide-leave-to {
   transform: translate3d(0, 100%, 0);
 }
+.fade-enter,.fade-leave-to{
+  opacity: 0;
+}
+.fade-enter-to,.fade-leave{
+  opacity: 1;
+}
+.fade-enter-active,.fade-leave-active{
+  transition: all 0.5s;
+}
+
 .play-list-mask{
   background-color: rgba(145,145,145,0.2);
   position: fixed;
@@ -318,17 +339,17 @@ export default {
   z-index: 999;
   height: 100%;
   background-color: #ffffff;
+  overflow: hidden;
   .play-bg{
-    position: fixed;
-    top: 0;
-    left: 0;
+    width: 300%;
     height: 100%;
-    background-size:cover;
-    background-position:center top;
-    -webkit-filter: blur(30px); /* Chrome, Safari, Opera */
+    z-index: -1;
+    opacity: 0.8;
     filter: blur(30px);
-    transition: all 1.5s;
-    animation: ease-in-out 1.5s;
+    img{
+      width: 100%;
+      height: 100%;
+    }
   }
   .mask{
     height: 100%;
@@ -344,9 +365,15 @@ export default {
   top: 0;
   left: 0;
   height: 100%;
+  .player-control{
+    height: calc(50% - 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
   .container{
     margin-top: 60px;
-    height: 60%;
+    height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -361,9 +388,9 @@ export default {
     align-items: center;
   }
   .play-circle{
-    width: 60%;
+    width: 70%;
     height: 0;
-    padding-bottom: 60%;
+    padding-bottom: 70%;
     position: relative;
     img{
       border-radius: 50%;
@@ -385,9 +412,6 @@ export default {
     justify-content: space-around;
     align-items: center;
     font-size: 26px;
-    position: absolute;
-    bottom: 30px;
-    left: 0;
     color: #ffffff;
     .playing{
       font-size: 50px;

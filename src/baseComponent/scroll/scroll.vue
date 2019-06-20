@@ -16,7 +16,7 @@ export default {
     },
     click: {
       type: Boolean,
-      default: false
+      default: true
     },
     scrollX: {
       type: Boolean,
