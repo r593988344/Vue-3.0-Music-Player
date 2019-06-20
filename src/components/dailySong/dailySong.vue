@@ -1,14 +1,14 @@
 <template>
   <transition name="slide">
     <div class="router-music-list">
-     <top-title></top-title>
-      <!--      // 吸顶播放-->
-      <div v-show="playTopShow" class="play playTop">
+     <top-title @back="back"></top-title>
+    <!--  &lt;!&ndash;      // 吸顶播放&ndash;&gt;
+      <div v-show="playTopShow" class="play playTop" @click="playAll">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-z"></use>
+          <use xlink:href="#icon-bofang"></use>
         </svg>
         <span class="play-all">播放全部</span>
-      </div>
+      </div>-->
       <!--      头部背景-->
       <div class="bg-img" ref="bgImg">
         <div class="dim-bg" alt="" style="width: 100%;height: 100%;"></div>
@@ -26,9 +26,9 @@
           </div>
           <!--          歌曲列表-->
           <song-list :songLists="songLists">
-            <div v-show="!playTopShow"  class="play" ref="play">
+            <div v-show="!playTopShow" class="play" ref="play" @click="playAll">
               <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
+                <use xlink:href="#icon-bofang"></use>
               </svg>
               <span class="play-all">播放全部</span>
             </div>
@@ -45,6 +45,8 @@ import { ERR_OK } from 'common/js/config'
 import Scroll from '@/baseComponent/scroll/scroll'
 import SongList from '@/baseComponent/songList/songList'
 import TopTitle from 'baseComponent/topTitle/topTitle'
+import { mapActions } from 'vuex'
+
 export default {
   name: 'dailySong',
   components: {
@@ -69,7 +71,7 @@ export default {
   mounted () {
     this._getDailySong()
     // 获取初始播放按钮距离顶部高度
-    this.playTop = this.$refs.play.offsetTop + 1
+    // this.playTop = this.$refs.play.offsetTop + 1
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
     this.nowDate.day = new Date().getDate()
@@ -80,27 +82,35 @@ export default {
     back () {
       this.$router.go(-1)
     },
+    playAll () {
+      if (this.songLists.length > 0) {
+        this.selectPlay({ list: this.songLists, index: 0 })
+      }
+    },
     // 获取滚动坐标
     scroll (pos) {
       let posY = pos.y
       posY >= 0 && (this.$refs.bgImg.style.height = (this.bgImgHeight + posY) + 'px')
-      this.floatingCover(posY, this.playTop)
+      // this.floatingCover(posY, this.playTop)
     },
-    // 滑动吊顶
+    /* // 滑动吊顶
     floatingCover (posY, offsetTop) {
       if (-posY >= offsetTop) {
         this.playTopShow = true
       } else {
         this.playTopShow = false
       }
-    },
+    },*/
     _getDailySong () {
       getDailySong().then(res => {
         if (res.data.code === ERR_OK) {
           this.songLists = res.data.result
         }
       })
-    }
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   }
 }
 </script>
@@ -112,6 +122,9 @@ export default {
     .song-list-scroll{
       height: calc(100% - 60px);
       overflow: hidden;
+      .flex-contain{
+        padding-bottom: 0px;
+      }
     }
     .bg-img{
       position: fixed;
@@ -147,10 +160,6 @@ export default {
         padding-left: 10px;
       }
     }
-    .playTop{
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-    }
   }
   .play{
     height: 40px;
@@ -171,8 +180,6 @@ export default {
     }
     .icon{
       font-size: 20px;
-      border: 1px solid #000;
-      border-radius: 13px;
       float: left;
     }
   }

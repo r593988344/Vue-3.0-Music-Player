@@ -1,6 +1,6 @@
 <template>
   <div class="router-music-list">
-    <top-title :titleName="titleName"></top-title>
+    <top-title :titleName="titleName" @back="back"></top-title>
     <div class="tabs">
       <Scroll :scrollX="scrollX">
         <ul ref="tabs">
@@ -46,6 +46,9 @@ export default {
     this._getTopList('全部')
   },
   methods: {
+    back () {
+      this.$router.go(-1)
+    },
     _getTopList (type) {
       getTopList(type).then(res => {
         this.songList = res.data.playlists

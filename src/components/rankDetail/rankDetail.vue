@@ -1,14 +1,14 @@
 <template>
   <transition name="slide">
     <div class="router-music-list">
-      <top-title :titleName="titleName"></top-title>
-      <!--      // 吸顶播放-->
-      <div v-show="playTopShow" class="play playTop">
+      <top-title :titleName="titleName" @back="back"></top-title>
+    <!--  &lt;!&ndash;      // 吸顶播放&ndash;&gt;
+      <div v-show="playTopShow" class="play playTop" @click="playAll">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-z"></use>
+          <use xlink:href="#icon-bofang"></use>
         </svg>
-        <span class="play-all" @click="playAll">播放全部<i>(共{{trackCount}}首)</i></span>
-      </div>
+        <span class="play-all">播放全部<i>(共{{trackCount}}首)</i></span>
+      </div>-->
       <!--      头部背景-->
       <div class="bg-img" ref="bgImg">
         <div class="dim-bg" alt="" :style="topBgImg"></div>
@@ -25,11 +25,11 @@
           </div>
           <!--          歌曲列表-->
           <song-list :songLists="songLists" :rank="rank">
-            <div v-show="!playTopShow"  class="play" ref="play">
+            <div v-show="!playTopShow" class="play" ref="play" @click="playAll">
               <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
+                <use xlink:href="#icon-bofang"></use>
               </svg>
-              <span class="play-all" @click="playAll">播放全部<i>(共{{trackCount}}首)</i></span>
+              <span class="play-all">播放全部<i>(共{{trackCount}}首)</i></span>
             </div>
           </song-list>
         </div>
@@ -67,11 +67,10 @@ export default {
   },
   mounted () {
     // 获取初始播放按钮距离顶部高度
-    this.playTop = this.$refs.play.offsetTop + 1
+    // this.playTop = this.$refs.play.offsetTop + 1
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
     this._getPersonalizedDetail()
-    console.log(this.musicList)
   },
   methods: {
     // 返回上一级
@@ -82,16 +81,16 @@ export default {
     scroll (pos) {
       let posY = pos.y
       posY >= 0 && (this.$refs.bgImg.style.height = (this.bgImgHeight + posY) + 'px')
-      this.floatingCover(posY, this.playTop)
+      // this.floatingCover(posY, this.playTop)
     },
     // 滑动吊顶
-    floatingCover (posY, offsetTop) {
+    /*floatingCover (posY, offsetTop) {
       if (-posY >= offsetTop) {
         this.playTopShow = true
       } else {
         this.playTopShow = false
       }
-    },
+    },*/
     _getPersonalizedDetail () {
       getPersonalizedDetail(this.musicList.id).then(res => {
         if (res.data.code === ERR_OK) {
@@ -101,7 +100,9 @@ export default {
       })
     },
     playAll () {
-      this.selectPlay({ list: this.songLists, index: 0 })
+      if (this.songLists.length > 0) {
+        this.selectPlay({ list: this.songLists, index: 0 })
+      }
     },
     ...mapActions([
       'selectPlay'

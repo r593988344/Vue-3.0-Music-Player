@@ -68,6 +68,7 @@ export default {
   @import "~common/scss/variable.scss";
   .loading-container{
     position: relative;
+    background-color: #ffffff;
   }
   .song-list{
     min-height: 100%;
@@ -76,13 +77,13 @@ export default {
   .songs{
     height: 100%;
     text-align: left;
-    padding: 0 15px;
+    padding: 0 10px;
     overflow: hidden;
     background-color: #ffffff;
-    padding-bottom: 40px;
+    /*padding-bottom: 40px;*/
   .song{
     height: 40px;
-    margin: 20px 0;
+    margin: 10px 0;
   .sorts{
     float: left;
     display: inline-block;

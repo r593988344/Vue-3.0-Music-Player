@@ -1,14 +1,7 @@
 <template>
   <transition name="slide">
     <div v-show="showPlay" class="play-song">
-      <div class="back-to">
-        <span class="back" @click="back">
-          Back
-        </span>
-        <div class="title-scroll">
-          <div>{{songDetail.name}}</div>
-        </div>
-      </div>
+      <top-title :titleName="songDetail.name" @back="back"></top-title>
       <div class="play-bg" :style="bgStyle"></div>
       <div class="mask"></div>
       <div class="play-container">
@@ -90,13 +83,17 @@
             <scroll :data="playList" :scrollToSong="currentIndex" class="scroll-container">
               <ul>
                 <li class="text-ellipsis-one-line" :class="{redColor:index === currentIndex}"
-                    v-for="(item,index) of playList" :key="index" ref="playList">
-                  <svg v-if="index === currentIndex" class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-faxian2"></use>
+                    v-for="(item,index) of playList" :key="index" ref="playList" @click="playSong(index)">
+                  <svg v-if="index === currentIndex" class="icon laba" aria-hidden="true">
+                    <use xlink:href="#icon-laba"></use>
                   </svg>
                   {{item.name}}
                   <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
-                  <i @click="deleteSong(index)">删除</i>
+                  <i @click="deleteSong(index)">
+                    <svg class="icon cancel" aria-hidden="true">
+                      <use xlink:href="#icon-cancel-1-copy"></use>
+                    </svg>
+                  </i>
                 </li>
               </ul>
             </scroll>
@@ -105,7 +102,7 @@
         </transition>
         <div v-show="playListShow" class="play-list-mask" @click="closePlayList"></div>
       </div>
-      <audio autoplay :src="currentSongUrl" ref="audio" @ended="end" @canplay="ready"></audio>
+      <audio id="music-audio" autoplay preload="auto" :src="currentSongUrl" ref="audio" @error="error" @ended="end" @canplay="ready"></audio>
     </div>
   </transition>
 </template>
@@ -127,10 +124,13 @@ export default {
       songDetail: {},
       currentSongUrl: '',
       songReady: false,
+      // 默认播放状态
       playIco: '#icon-bofang'
     }
   },
   mounted () {
+    this.$refs.audio.pause()
+    this.$refs.audio.currentTime = 0
   },
   methods: {
     back () {
@@ -143,19 +143,20 @@ export default {
       this.playListShow = false
     },
     deleteSong (index) {
+      event.stopPropagation()
       this.deletePlayList(index)
       if (index === this.currentIndex) {
-        this._getSongUrl(this.currentSongId)
+        this._getSongUrl(this.currentSong.id)
         this._getSong()
       } else if (index < this.currentIndex) {
-        this.setCurrentIndex(index - 1)
+        this.setCurrentIndex(index)
       }
     },
     _clearAll () {
       this.clearAll([])
     },
     _getSong () {
-      this.songId = this.currentSongId
+      this.songId = this.currentSong.id
       getSong([this.songId]).then(res => {
         if (res.data.code === ERR_OK) {
           this.songDetail = res.data.songs[0]
@@ -166,13 +167,25 @@ export default {
       getSongUrl(id).then(res => {
         if (res.data.code === ERR_OK) {
           this.currentSongUrl = res.data.data[0].url
+          setTimeout(() => {
+            const audio = this.$refs.audio
+            if (this.playing) {
+              audio.play()
+              this.playIco = '#icon-suspend_icon'
+            } else {
+              audio.pause()
+              this.playIco = '#icon-bofang'
+            }
+          }, 20)
         }
       })
     },
     togglePlaying () {
       const audio = this.$refs.audio
-      this.setPlaying(!this.playing)
-      this.playing ? audio.play() : audio.pause()
+      if (this.playList.length > 0) {
+        this.setPlaying(!this.playing)
+        this.playing ? audio.play() : audio.pause()
+      }
     },
     ready () {
       this.songReady = true
@@ -181,13 +194,17 @@ export default {
     end () {
       this.nextSong()
     },
+    error () {
+      this.songReady = true
+    },
     loop () {
+      this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
     },
     nextSong () {
-      if (!this.songReady) {
+      /*if (!this.songReady) {
         return
-      }
+      }*/
       if (this.playList.length === 1) {
         this.loop()
         return
@@ -204,9 +221,9 @@ export default {
       this.songReady = false
     },
     preSong () {
-      if (!this.songReady) {
+      /*if (!this.songReady) {
         return
-      }
+      }*/
       if (this.playList.length === 1) {
         this.loop()
         return
@@ -224,6 +241,7 @@ export default {
     },
     playSong (index) {
       this.setCurrentIndex(index)
+      this.setPlaying(true)
     },
     ...mapMutations({
       playHide: 'SHOW_PLAY',
@@ -249,19 +267,21 @@ export default {
     listNumber () {
       return this.playList.length
     },
-    ...mapGetters(['showPlay', 'playList', 'currentIndex', 'currentSongId', 'playing'])
+    ...mapGetters(['showPlay', 'playList', 'currentIndex', 'currentSong', 'playing'])
   },
   watch: {
-    currentIndex () {
+    currentSong (newSong, oldSong) {
       const audio = this.$refs.audio
-      this._getSongUrl(this.currentSongId)
-      if (this.songReady) {
-        audio.play()
-        this.songReady = false
+      if (!newSong.id) {
+        return
       }
-      setTimeout(() => {
-        this._getSong()
-      }, 600)
+      if (newSong.id === oldSong.id) {
+        return
+      }
+      audio.pause()
+      audio.currentTime = 0
+      this._getSong()
+      this._getSongUrl(newSong.id)
     },
     playing () {
       if (this.playing) {
@@ -317,29 +337,6 @@ export default {
     position: fixed;
     top: 0;
     bottom: 0;
-  }
-  .back-to{
-    height: 50px;
-    line-height: 50px;
-    color: #ffffff;
-    position: relative;
-    z-index: 3;
-    .back{
-      float: left;
-      width: 20%;
-    }
-    >div{
-      width: 50%;
-      margin-left: 25%;
-      overflow: hidden;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      .title-scroll{
-        white-space: nowrap;
-      }
-    }
   }
 }
 .play-container{
@@ -439,9 +436,6 @@ export default {
         font-size: 20px;
       }
     }
-    ul{
-      /*padding-bottom: 114px;*/
-    }
     li{
       border-bottom: 1px solid $border-bottom-gray;
       margin-left: 15px;
@@ -458,20 +452,32 @@ export default {
     }
     .close{
       text-align: center;
-      line-height: 50px;
+      line-height: 40px;
       position: absolute;
       bottom: 0;
       left: 0;
-      padding-bottom: 20px;
+      padding-bottom: 8px;
       background-color: #ffffff;
       border-top: 1px solid $border-bottom-gray;
     }
   }
   .scroll-container{
-    height: calc(100% - 110px);
+    height: calc(100% - 90px);
     overflow: hidden;
     .redColor{
       color: $background-r-color;
+      .cancel{
+        color: $background-r-color;
+      }
+      span{
+        color: $background-r-color;
+      }
+    }
+    .laba{
+      font-size: $font-size-md;
+    }
+    .cancel{
+      color: $song-list-gray-font;
     }
   }
 }

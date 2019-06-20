@@ -66,7 +66,7 @@ export default {
 <style lang="scss" scoped>
 @import "~common/scss/variable.scss";
 .music-footer{
-  height: 66px;
+  height: 56px;
   background-color: #ffffff;
   overflow: hidden;
   .tabs{

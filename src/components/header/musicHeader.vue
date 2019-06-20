@@ -9,21 +9,26 @@
         </svg>
         <input class="search-input" type="text" placeholder="请输入要搜索的歌曲">
       </form>
-      <img src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
+      <img v-show="!showPlay" src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
     </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'musicHeader',
   methods: {
     _showPlay () {
-      this.showPlay(true)
+      this.showPlays(true)
     },
     ...mapMutations({
-      showPlay: 'SHOW_PLAY'
+      showPlays: 'SHOW_PLAY'
     })
+  },
+  computed: {
+    ...mapGetters([
+      'showPlay'
+    ])
   }
 }
 </script>
@@ -33,7 +38,7 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 60px;
+  height: 50px;
   img{
     z-index: 9999;
   }
@@ -57,7 +62,6 @@ export default {
       color: #e2e2e2;
     }
   }
-
   .icon-voice{
     width: 10%;
     color: #ffffff;

@@ -1,6 +1,6 @@
 <template>
     <div class="ranking-list">
-      <top-title :titleName="titleName"></top-title>
+      <top-title :titleName="titleName" @back="back"></top-title>
       <scroll :data="officialList">
         <div>
           <div class="official-list">
@@ -106,6 +106,10 @@ export default {
     this._getRankListDetail()
   },
   methods: {
+    back () {
+      console.log('hasback')
+      this.$router.back()
+    },
     _playExChange (item) {
       item.playCount = playExchange(item.playCount)
     },
@@ -142,7 +146,7 @@ export default {
   @import "~common/scss/variable.scss";
   @import "~common/scss/common.scss";
 .ranking-list{
-  height: 100%;
+  height: calc(100% - 56px);
   position: fixed;
   top: 0;
   left: 0;
@@ -150,7 +154,7 @@ export default {
     background-color: $background-r-color;
   }
   .scroll-body{
-    height: calc(100% - 116px);
+    height: calc(100% - 40px);
     background-color: #ffffff;
   }
 }

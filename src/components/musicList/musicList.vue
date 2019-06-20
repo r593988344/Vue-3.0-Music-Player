@@ -1,17 +1,17 @@
 <template>
     <div class="router-music-list">
-      <top-title :titleName="topTitle"></top-title>
-      <!--      // 吸顶播放-->
-      <div v-show="playTopShow" class="play playTop">
+      <top-title :titleName="topTitle" @back="back"></top-title>
+     <!-- &lt;!&ndash;      // 吸顶播放&ndash;&gt;
+      <div v-show="playTopShow" class="play playTop" @click="playAll">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-z"></use>
+          <use xlink:href="#icon-bofang"></use>
         </svg>
-        <span class="play-all" @click="playAll">播放全部 <i>(共{{trackCount}}首)</i></span>
-      </div>
+        <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
+      </div>-->
       <!--      背景虚化-->
       <div class="bg-img" ref="bgImg">
-        <div class="bg-mask"></div>
-        <div class="dim-bg" :style="bgStyle" alt="" style="width: 100%;height: 100%;"></div>
+<!--        <div class="bg-mask"></div>-->
+        <div class="dim-bg" :style="bgStyle"></div>
       </div>
       <!--       滚动区域-->
       <scroll class="song-list-scroll"
@@ -70,11 +70,11 @@
           </div>
           <!--          歌曲列表-->
           <song-list :songLists="songLists">
-            <div v-show="!playTopShow"  class="play" ref="play">
+            <div v-show="!playTopShow" class="play" ref="play" @click="playAll">
               <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-z"></use>
+                <use xlink:href="#icon-bofang"></use>
               </svg>
-              <span class="play-all" @click="playAll">播放全部 <i>(共{{trackCount}}首)</i></span>
+              <span class="play-all">播放全部 <i>(共{{trackCount}}首)</i></span>
             </div>
           </song-list>
         </div>
@@ -122,7 +122,7 @@ export default {
   mounted () {
     this._getPersonalizedDetail()
     // 获取初始播放按钮距离顶部高度
-    this.playTop = this.$refs.play.offsetTop + 1
+    // this.playTop = this.$refs.play.offsetTop + 1
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
   },
@@ -133,15 +133,18 @@ export default {
       posY >= 0 && (this.$refs.bgImg.style.height = (this.bgImgHeight + posY) + 'px')
       let titleNameTop = this.$refs.titleName.clientHeight
       this.changeTitle(posY, titleNameTop)
-      this.floatingCover(posY, this.playTop)
+      // this.floatingCover(posY, this.playTop)
     },
-    // 滑动吊顶
+    /*// 滑动吊顶
     floatingCover (posY, offsetTop) {
       if (Math.abs(posY) >= offsetTop) {
         this.playTopShow = true
       } else {
         this.playTopShow = false
       }
+    },*/
+    back () {
+      this.$router.go(-1)
     },
     // 滑动改变标题
     changeTitle (posY, offsetTop) {
@@ -174,7 +177,9 @@ export default {
       }
     },
     playAll () {
-      this.selectPlay({ list: this.songLists, index: 0 })
+      if (this.songLists.length > 0) {
+        this.selectPlay({ list: this.songLists, index: 0 })
+      }
     },
     ...mapActions([
       'selectPlay'
@@ -198,14 +203,14 @@ export default {
 .router-music-list{
     .bg-img{
       position: fixed;
-      height: 260px;
+      height: 300px;
       z-index: -1;
       top: 0;
       left: 0;
       overflow: hidden;
       .bg-mask{
         background-color: rgba(0, 0, 0, 0.62);
-        opacity: 0.3;
+        opacity: 0.8;
         position: absolute;
         top: 0;
         left: 0;
@@ -217,8 +222,10 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        -webkit-filter: blur(30px); /* Chrome, Safari, Opera */
-        filter: blur(30px);
+        -webkit-filter: blur(10px) brightness(.6); /* Chrome, Opera */
+        -moz-filter: blur(10px) brightness(.6);
+        -ms-filter: blur(10px) brightness(.6);
+        filter: blur(10px) brightness(.6);
         background-size:cover;
         background-position:center top;
       }
@@ -227,13 +234,14 @@ export default {
       color: #ffffff;
       .image{
         height: 140px;
+        padding-left: 15px;
+        padding-top: 5px;
       }
       .business-card-bottom{
         height: 60px;
         display: flex;
         justify-content: space-around;
         font-size: 22px;
-        padding-top: 10px;
         padding-bottom: 10px;
         .song-icons span{
           display: block;
@@ -242,12 +250,18 @@ export default {
         }
       }
       .image-left{
-        height: 140px;
-        width: 45%;
+        height: 0;
+        width: 38%;
+        padding-top: 38%;
         float: left;
         padding-left: 12px;
         position: relative;
         img{
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
           border-radius: 5px;
         }
       }
@@ -261,6 +275,7 @@ export default {
         top: 0;
         .icon{
           vertical-align: middle;
+          font-weight: bolder;
         }
         span{
           font-size: $font-size-smm;
@@ -272,14 +287,14 @@ export default {
       }
       .introduce{
         float: left;
-        width: 55%;
+        width: 62%;
         padding-left: 15px;
         padding-right: 15px;
         height: 130px;
         position: relative;
         div{
           height: 30px;
-          margin: 15px 0;
+          margin: 5px 0;
         }
         img{
           width: 30px;
@@ -301,7 +316,7 @@ export default {
           padding-right: 1px;
           text-align: left;
           margin-top: 5px;
-          margin-bottom: 10px;
+          margin-bottom: 5px;
         }
         .title{
           font-size: $font-size-lg;

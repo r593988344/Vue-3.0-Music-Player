@@ -1,7 +1,9 @@
 <template>
   <div class="back-to">
         <span class="back" @click="back">
-          Back
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-houtui"></use>
+          </svg>
         </span>
     <div class="title-scroll">
       <div>{{titleName}}</div>
@@ -20,7 +22,8 @@ export default {
   },
   methods: {
     back () {
-      this.$router.go(-1)
+      console.log('back')
+      this.$emit('back')
     }
   }
 }
@@ -28,15 +31,19 @@ export default {
 
 <style lang="scss" scoped>
   .back-to{
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
     color: #ffffff;
     position: relative;
-  .back{
-    text-align: left;
-    padding-left: 15px;
+    z-index: 3;
+    .back{
     float: left;
     width: 20%;
+    font-size: 22px;
+    display: flex;
+    height: 40px;
+      padding-left: 10px;
+    align-items: center;
   }
   >div{
     width: 50%;

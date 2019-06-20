@@ -1,6 +1,6 @@
 @import "~common/scss/variable.scss";
 .router-music-list{
-  height: calc(100% - 66px);
+  height: calc(100% - 56px);
   width: 100%;
   position: fixed;
   top: 0;
@@ -13,7 +13,7 @@
     overflow: hidden;
   }
   .flex-contain{
-    padding-bottom: 66px;
+    padding-bottom: 56px;
   }
   .playTop{
     border-top-left-radius: 15px;
@@ -31,15 +31,13 @@
     .play-all{
       font-size: $font-size-lg;
       font-weight: bold;
-      padding-left: 10px;
+      padding-left: 12px;
       line-height: 40px;
       display: flex;
       align-items: center;
     }
     .icon{
-      font-size: 20px;
-      border: 1px solid #000;
-      border-radius: 13px;
+      font-size: 22px;
       float: left;
     }
   }
