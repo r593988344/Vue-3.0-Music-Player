@@ -6,10 +6,12 @@
           <div class="bar-inner">
             <div class="progress-color" :style="`width:${moveWidth}px`"></div>
             <div class="progress-btn-wrapper">
-              <div class="progress-btn" :style="`left:${moveWidth}px`"
-                   @touchstart="touchstart($event)"
-                   @touchmove="touchmove($event)"
-                   @touchend="touchend($event)">
+              <div class="progress-btn" :style="`left:${moveWidth}px`">
+                <div class="btn"
+                     @touchstart.stop="touchstart($event)"
+                     @touchmove.stop="touchmove($event)"
+                     @touchend.stop="touchend($event)">
+                </div>
               </div>
             </div>
           </div>
@@ -124,9 +126,16 @@ export default {
       .progress-btn{
         width: 10px;
         height: 10px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 50%;
         background-color: #ffffff;
-        position: relative;
+        .btn{
+          width: 20px;
+          height: 25px;
+        }
       }
     }
   }

@@ -22,7 +22,6 @@ export default {
   },
   methods: {
     back () {
-      console.log('back')
       this.$emit('back')
     }
   }
@@ -35,7 +34,7 @@ export default {
     line-height: 40px;
     color: #ffffff;
     position: relative;
-    z-index: 3;
+    z-index: 999;
     .back{
     float: left;
     width: 20%;

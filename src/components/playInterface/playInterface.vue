@@ -10,6 +10,7 @@
         <div class="container">
           <div class="play-circle">
             <img class="bg-img" :class="{rotation: !playing}" :src="circleImg">
+            <img class="bg-img" v-if="!circleImg" :class="{rotation: !playing}" src="~common/image/disc.png">
           </div>
         </div>
         <div class="player-control">
@@ -235,7 +236,7 @@ export default {
       this.touching = touching
       const currentTime = this.duration * percent
       this.currentTime = currentTime
-      if (!touching) {
+      if (!touching && this.currentSong) {
         this.$refs.audio.currentTime = currentTime
       }
     },
