@@ -44,11 +44,8 @@ export function getCompetitive (timer) {
   return axios.get(url)
 }
 // 获取歌曲详细信息
-export function getSong (ids) {
-  let url = Host + '/song/detail?ids='
-  ids.forEach(item => {
-    url = url + item + ','
-  })
+export function getSong (id) {
+  let url = Host + '/song/detail?ids=' + id
   return axios.get(url)
 }
 // 所有榜单

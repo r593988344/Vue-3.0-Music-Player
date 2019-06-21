@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div v-show="showPlay" class="play-song" @touchstart.once="firstPlay">
-      <top-title :titleName="songDetail.name" @back="back"></top-title>
+      <top-title :titleName="currentSong.name" @back="back"></top-title>
       <div class="play-bg">
         <img :src="circleImg" alt="">
       </div>
@@ -35,7 +35,7 @@
               </svg>
             </div>
           </div>
-          <progress-bar :currentTime="currentTime"></progress-bar>
+          <progress-bar :currentTime="currentTime" :duration="duration" :percent="percent" @changePercent="changePercent"></progress-bar>
           <div class="actions">
             <div>
               <svg class="icon" aria-hidden="true">
@@ -49,7 +49,7 @@
             </div>
             <div @click="togglePlaying" class="playing">
               <svg class="icon" aria-hidden="true">
-                <use :xlink:href="playIco"></use>
+                <use :xlink:href="playIcon"></use>
               </svg>
             </div>
             <div @click="nextSong">
@@ -105,7 +105,7 @@
         </transition>
         <div v-show="playListShow" class="play-list-mask" @click="closePlayList"></div>
       </div>
-      <audio id="music-audio" autoplay preload="auto" ref="audio" @error="error" @ended="end" @canplay="ready" @timeupdate="timeupdate"></audio>
+      <audio id="music-audio" autoplay ref="audio" @ended="end" @canplay="ready" @timeupdate="timeupdate"></audio>
     </div>
   </transition>
 </template>
@@ -114,7 +114,7 @@
 import TopTitle from 'baseComponent/topTitle/topTitle'
 import { mapGetters, mapMutations } from 'vuex'
 import Scroll from 'baseComponent/scroll/scroll'
-import { getSong, getSongUrl } from 'common/api/discover'
+import { getSongUrl } from 'common/api/discover'
 import { ERR_OK } from 'common/js/config'
 import ProgressBar from 'baseComponent/progressBar/progressBar'
 
@@ -125,24 +125,25 @@ export default {
     return {
       playListShow: false,
       playMode: '列表循环',
-      songDetail: {},
       currentSongUrl: '',
       songReady: false,
-      // 默认播放状态
-      playIco: '#icon-bofang',
       // 播放进度
       currentTime: 0,
       // 歌曲总时长
-      duration: 0
+      duration: 0,
+      // 歌曲播放比例
+      percent: 0,
+      touching: false,
+      circleImg: ''
     }
   },
   mounted () {
-    this.$refs.audio.pause()
-    this.$refs.audio.currentTime = 0
+    this.touching = false
   },
   methods: {
     firstPlay () {
-      this.$refs.audio.play()
+      let audio = this.$refs.audio
+      audio.play()
     },
     back () {
       this.playHide(false)
@@ -156,40 +157,23 @@ export default {
     deleteSong (index) {
       this.deletePlayList(index)
       if (index === this.currentIndex) {
-        this._getSongUrl(this.currentSong.id)
-        this._getSong()
+        this._getSong(this.currentSong.id)
       } else if (index < this.currentIndex) {
         this.setCurrentIndex(this.currentIndex - 1)
       }
     },
     timeupdate (e) {
-      this.currentTime = e.target.currentTime
+      if (!this.touching) {
+        this.currentTime = e.target.currentTime
+      }
     },
     _clearAll () {
       this.clearAll([])
     },
-    _getSong () {
-      this.songId = this.currentSong.id
-      getSong([this.songId]).then(res => {
-        if (res.data.code === ERR_OK) {
-          this.songDetail = res.data.songs[0]
-        }
-      })
-    },
-    _getSongUrl (id) {
-      getSongUrl(id).then(res => {
+    _getSong (songId) {
+      getSongUrl(songId).then(res => {
         if (res.data.code === ERR_OK) {
           this.currentSongUrl = res.data.data[0].url
-          const audio = this.$refs.audio
-          audio.src = this.currentSongUrl
-          this.duration = this.$refs.audio.duration
-          if (this.playing) {
-            audio.play()
-            this.playIco = '#icon-suspend_icon'
-          } else {
-            audio.pause()
-            this.playIco = '#icon-bofang'
-          }
         }
       })
     },
@@ -207,17 +191,11 @@ export default {
     end () {
       this.nextSong()
     },
-    error () {
-      this.songReady = true
-    },
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
     },
     nextSong () {
-      /*if (!this.songReady) {
-        return
-      }*/
       if (this.playList.length === 1) {
         this.loop()
         return
@@ -234,9 +212,6 @@ export default {
       this.songReady = false
     },
     preSong () {
-      /*if (!this.songReady) {
-        return
-      }*/
       if (this.playList.length === 1) {
         this.loop()
         return
@@ -256,6 +231,14 @@ export default {
       this.setCurrentIndex(index)
       this.setPlaying(true)
     },
+    changePercent (percent, touching) {
+      this.touching = touching
+      const currentTime = this.duration * percent
+      this.currentTime = currentTime
+      if (!touching) {
+        this.$refs.audio.currentTime = currentTime
+      }
+    },
     ...mapMutations({
       playHide: 'SHOW_PLAY',
       deletePlayList: 'DEL_PLAY_LIST',
@@ -265,18 +248,17 @@ export default {
     })
   },
   computed: {
-    circleImg () {
-      if (this.songDetail.al) {
-        return this.songDetail.al.picUrl
-      }
-    },
     listNumber () {
       return this.playList.length
+    },
+    playIcon () {
+      return this.playing ? '#icon-suspend_icon' : '#icon-bofang'
     },
     ...mapGetters(['showPlay', 'playList', 'currentIndex', 'currentSong', 'playing'])
   },
   watch: {
     currentSong (newSong, oldSong) {
+      this.circleImg = newSong.song ? newSong.song.album.picUrl : newSong.album.picUrl
       const audio = this.$refs.audio
       if (!newSong.id) {
         return
@@ -284,17 +266,24 @@ export default {
       if (newSong.id === oldSong.id) {
         return
       }
-      audio.pause()
       audio.currentTime = 0
-      this._getSong()
-      this._getSongUrl(newSong.id)
+      this._getSong(newSong.id)
     },
-    playing () {
-      if (this.playing) {
-        this.playIco = '#icon-suspend_icon'
-      } else {
-        this.playIco = '#icon-bofang'
-      }
+    currentSongUrl () {
+      const audio = this.$refs.audio
+      audio.pause()
+      audio.src = this.currentSongUrl
+      // 判断歌曲是否加载完成
+      let stop = setInterval(() => {
+        this.duration = audio.duration
+        if (this.duration) {
+          clearInterval(stop)
+        }
+      }, 150)
+      this.setPlaying(true)
+    },
+    currentTime () {
+      this.percent = Math.floor(this.currentTime) / Math.floor(this.duration)
     }
   }
 }
@@ -318,7 +307,6 @@ export default {
 .fade-enter-active,.fade-leave-active{
   transition: all 0.5s;
 }
-
 .play-list-mask{
   background-color: rgba(145,145,145,0.2);
   position: fixed;
