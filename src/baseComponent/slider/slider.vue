@@ -116,11 +116,11 @@ export default {
   @import "~common/scss/variable.scss";
 .slider {
   min-height: 1px;
-  position: relative;
-  height: auto;
-  width: 90%;
-  margin-left: 5%;
-  margin-top: -40px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
   overflow: hidden;
   border-radius: 8px;
   .slider-group {
@@ -128,14 +128,20 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     display: flex;
+    height: 100%;
     justify-content: center;
     .slider-item {
       float: left;
       box-sizing: border-box;
       overflow: hidden;
       text-align: center;
+      a{
+        display: block;
+        height: 100%;
+      }
       img {
         width: 100%;
+        height: 100%;
         display: block;
         border-radius: 8px;
       }

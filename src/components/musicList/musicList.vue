@@ -1,8 +1,8 @@
 <template>
     <div class="router-music-list">
       <top-title :titleName="topTitle" @back="back"></top-title>
-     <!-- &lt;!&ndash;      // 吸顶播放&ndash;&gt;
-      <div v-show="playTopShow" class="play playTop" @click="playAll">
+      <!--      // 吸顶播放-->
+     <!-- <div v-show="playTopShow" class="play playTop" @click="playAll">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-bofang"></use>
         </svg>
@@ -10,8 +10,10 @@
       </div>-->
       <!--      背景虚化-->
       <div class="bg-img" ref="bgImg">
-<!--        <div class="bg-mask"></div>-->
-        <div class="dim-bg" :style="bgStyle"></div>
+        <div class="bg-mask"></div>
+        <div class="dim-bg">
+          <img :src="bgStyle" alt="">
+        </div>
       </div>
       <!--       滚动区域-->
       <scroll class="song-list-scroll"
@@ -44,19 +46,19 @@
             <div class="business-card-bottom">
               <div class="song-icons">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-faxian1"></use>
+                  <use xlink:href="#icon-pinglun"></use>
                 </svg>
                 <span>{{commentCount}}</span>
               </div>
               <div class="song-icons">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-faxian1"></use>
+                  <use xlink:href="#icon-fenxiang"></use>
                 </svg>
                 <span>{{shareCount}}</span>
               </div>
               <div class="song-icons">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-faxian1"></use>
+                  <use xlink:href="#icon-iconset0425"></use>
                 </svg>
                 <span>下载</span>
               </div>
@@ -116,13 +118,14 @@ export default {
       listenScroll: true,
       playTopShow: false,
       topTitle: '歌单',
-      bgImgHeight: null
+      bgImgHeight: null,
+      playTop: 0
     }
   },
   mounted () {
     this._getPersonalizedDetail()
     // 获取初始播放按钮距离顶部高度
-    // this.playTop = this.$refs.play.offsetTop + 1
+    // this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
   },
@@ -135,8 +138,8 @@ export default {
       this.changeTitle(posY, titleNameTop)
       // this.floatingCover(posY, this.playTop)
     },
-    /*// 滑动吊顶
-    floatingCover (posY, offsetTop) {
+    // 滑动吊顶
+    /* floatingCover (posY, offsetTop) {
       if (Math.abs(posY) >= offsetTop) {
         this.playTopShow = true
       } else {
@@ -165,13 +168,13 @@ export default {
       } else {
         getPersonalizedDetail(id).then(res => {
           if (res.data.code === ERR_OK) {
-            this.songLists = res.data.result.tracks
-            this.description = res.data.result.description
-            this.nickname = res.data.result.creator.nickname
-            this.avatarUrl = res.data.result.creator.avatarUrl
-            this.shareCount = res.data.result.shareCount
-            this.commentCount = res.data.result.commentCount
-            this.trackCount = res.data.result.trackCount
+            this.songLists = res.data.playlist.tracks
+            this.description = res.data.playlist.description
+            this.nickname = res.data.playlist.creator.nickname
+            this.avatarUrl = res.data.playlist.creator.avatarUrl
+            this.shareCount = res.data.playlist.shareCount
+            this.commentCount = res.data.playlist.commentCount
+            this.trackCount = res.data.playlist.trackCount
           }
         })
       }
@@ -187,11 +190,10 @@ export default {
   },
   computed: {
     bgStyle () {
-      return `background-image: url(${this.musicList.picUrl || this.musicList.coverImgUrl})`
+      return this.musicList.picUrl || this.musicList.coverImgUrl
     },
     ...mapGetters([
-      'musicList',
-      'songListId'
+      'musicList'
     ])
   }
 }
@@ -210,7 +212,7 @@ export default {
       overflow: hidden;
       .bg-mask{
         background-color: rgba(0, 0, 0, 0.62);
-        opacity: 0.8;
+        opacity: 0.3;
         position: absolute;
         top: 0;
         left: 0;
@@ -222,12 +224,16 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        -webkit-filter: blur(10px) brightness(.6); /* Chrome, Opera */
-        -moz-filter: blur(10px) brightness(.6);
-        -ms-filter: blur(10px) brightness(.6);
-        filter: blur(10px) brightness(.6);
+        -webkit-filter: blur(20px); /* Chrome, Opera */
+        -moz-filter: blur(20px);
+        -ms-filter: blur(20px);
+        filter: blur(20px);
         background-size:cover;
         background-position:center top;
+        img{
+          width: 100%;
+          height: 100%;
+        }
       }
     }
     .business-card{

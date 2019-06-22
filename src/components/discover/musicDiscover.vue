@@ -9,11 +9,11 @@
         <!--顶部红色背景-->
         <div class="red-bg-color top-red"></div>
         <!--轮播图部分-->
-        <div v-if="banner.length">
-          <slider>
+        <div class="banner-container">
+          <slider v-if="banner.length">
             <div v-for="(item, i) in banner" :key="i">
               <a :href="item.url">
-                <img :src="item.picUrl" alt="">
+                <img :src="item.imageUrl" alt="">
               </a>
             </div>
           </slider>
@@ -162,6 +162,14 @@ export default {
   .scroll-contain{
     height: 100%;
     overflow: hidden;
+    .banner-container{
+      width: 90%;
+      height: 0;
+      padding-top: 40%;
+      position: relative;
+      margin-left: 5%;
+      margin-top: -40px;
+    }
     .loading-container{
       position: absolute;
       left: 50%;

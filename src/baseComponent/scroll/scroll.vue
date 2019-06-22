@@ -120,6 +120,6 @@ export default {
 .scroll-body{
   height: 100%;
   overflow: hidden;
-  position: relative;
+  /*position: relative;*/
 }
 </style>

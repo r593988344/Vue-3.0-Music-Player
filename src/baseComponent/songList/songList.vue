@@ -11,7 +11,7 @@
           <div class="artist">
             <p class="text-ellipsis-one-line">{{item.name}}</p>
             <p class="text-ellipsis-one-line">
-              <span v-for="(names, index) of item.artists" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
+              <span v-for="(names, index) of item.ar" :key="index"><span v-if="index !== 0">/</span>{{names.name}}</span>
               <span>-{{item.name}}</span>
             </p>
           </div>
@@ -67,23 +67,19 @@ export default {
 <style lang="scss" scoped>
   @import "~common/scss/variable.scss";
   .loading-container{
-    position: absolute;
     background-color: #ffffff;
-    top: 60px;
-    left: 0;
   }
   .song-list{
     min-height: 100%;
     height: auto;
     overflow: hidden;
-    position: relative;
   .songs{
     height: 100%;
     text-align: left;
     padding: 0 10px;
     overflow: hidden;
     background-color: #ffffff;
-    min-height: 100px;
+    min-height: 20px;
   .song{
     height: 40px;
     margin: 10px 0;

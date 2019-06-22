@@ -3,7 +3,9 @@
     <div v-show="showPlay" class="play-song" @touchstart.once="firstPlay">
       <top-title :titleName="currentSong.name" @back="back"></top-title>
       <div class="play-bg">
-        <img :src="circleImg" alt="">
+        <transition name="fade1" @after-leave="afterLeave">
+          <img v-show="nowPic" :src="circleImg" alt="" @load="loaded">
+        </transition>
       </div>
       <div class="mask"></div>
       <div class="play-container">
@@ -38,9 +40,9 @@
           </div>
           <progress-bar :currentTime="currentTime" :duration="duration" :percent="percent" @changePercent="changePercent"></progress-bar>
           <div class="actions">
-            <div>
+            <div @click="changeMode">
               <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-suijibofang"></use>
+                <use :xlink:href="modeIcon"></use>
               </svg>
             </div>
             <div @click="preSong">
@@ -69,10 +71,10 @@
           <div v-if="playListShow" class="play-lists">
             <div class="list-title">
               <div class="title-left">
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-xunhuanbofang"></use>
+                <svg class="icon" aria-hidden="true" @click="changeMode">
+                  <use :xlink:href="modeIcon"></use>
                 </svg>
-                <span>{{playMode}} ({{listNumber}})</span>
+                <span>{{modeDescription}} ({{listNumber}})</span>
               </div>
               <div class="title-right">
                 <svg class="icon" aria-hidden="true">
@@ -92,7 +94,7 @@
                     <use xlink:href="#icon-laba"></use>
                   </svg>
                   {{item.name}}
-                  <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
+                  <span v-for="(names, index) of item.ar" :key="index">-{{names.name}}</span>
                   <i @click.stop="deleteSong(index)">
                     <svg class="icon cancel" aria-hidden="true">
                       <use xlink:href="#icon-cancel-1-copy"></use>
@@ -106,7 +108,7 @@
         </transition>
         <div v-show="playListShow" class="play-list-mask" @click="closePlayList"></div>
       </div>
-      <audio id="music-audio" autoplay ref="audio" @ended="end" @canplay="ready" @timeupdate="timeupdate"></audio>
+      <audio id="music-audio" autoplay ref="audio" @ended="end" @canplay="ready" @timeupdate="timeUpdate"></audio>
     </div>
   </transition>
 </template>
@@ -115,8 +117,9 @@
 import TopTitle from 'baseComponent/topTitle/topTitle'
 import { mapGetters, mapMutations } from 'vuex'
 import Scroll from 'baseComponent/scroll/scroll'
-import { getSongUrl } from 'common/api/discover'
-import { ERR_OK } from 'common/js/config'
+import { getSongUrl, getLyrics } from 'common/api/discover'
+import { ERR_OK, playMode } from 'common/js/config'
+import { breakArray } from 'common/js/tool'
 import ProgressBar from 'baseComponent/progressBar/progressBar'
 
 export default {
@@ -125,7 +128,6 @@ export default {
   data () {
     return {
       playListShow: false,
-      playMode: '列表循环',
       currentSongUrl: '',
       songReady: false,
       // 播放进度
@@ -135,13 +137,24 @@ export default {
       // 歌曲播放比例
       percent: 0,
       touching: false,
-      circleImg: ''
+      circleImg: '',
+      nowPic: true
     }
   },
   mounted () {
     this.touching = false
   },
   methods: {
+    changeMode () {
+      const mode = (this.mode + 1) % 3
+      this.setMode(mode)
+    },
+    afterLeave () {
+      this.nowPic = true
+    },
+    loaded () {
+      // this.nowPic = true
+    },
     firstPlay () {
       let audio = this.$refs.audio
       audio.play()
@@ -163,18 +176,33 @@ export default {
         this.setCurrentIndex(this.currentIndex - 1)
       }
     },
-    timeupdate (e) {
+    timeUpdate (e) {
       if (!this.touching) {
         this.currentTime = e.target.currentTime
       }
     },
     _clearAll () {
-      this.clearAll([])
+      this.$refs.audio.src = ''
+      this.setPlayList([])
+      this.playHide(false)
+      this.setPlaying(false)
+      this.closePlayList()
     },
     _getSong (songId) {
       getSongUrl(songId).then(res => {
         if (res.data.code === ERR_OK) {
           this.currentSongUrl = res.data.data[0].url
+          if (!this.currentSongUrl) {
+            this.nextSong()
+          }
+        }
+        console.log(this.$refs.audio)
+      })
+      this._getLyrics(songId)
+    },
+    _getLyrics (id) {
+      getLyrics(id).then(res => {
+        if (res.data.code === ERR_OK) {
         }
       })
     },
@@ -197,13 +225,18 @@ export default {
       this.$refs.audio.play()
     },
     nextSong () {
-      if (this.playList.length === 1) {
+      let index = null
+      if (this.playList.length === 1 || this.mode === playMode.loop) {
         this.loop()
         return
       } else {
-        let index = this.currentIndex + 1
-        if (index === this.playList.length) {
-          index = 0
+        if (this.mode === playMode.random) {
+          index = breakArray(this.playList.length)
+        } else {
+          index = this.currentIndex + 1
+          if (index === this.playList.length) {
+            index = 0
+          }
         }
         this.setCurrentIndex(index)
         if (!this.playing) {
@@ -213,13 +246,18 @@ export default {
       this.songReady = false
     },
     preSong () {
-      if (this.playList.length === 1) {
+      let index = null
+      if (this.playList.length === 1 || this.mode === playMode.loop) {
         this.loop()
         return
       } else {
-        let index = this.currentIndex - 1
-        if (index < 0) {
-          index = this.playList.length - 1
+        if (this.mode === playMode.random) {
+          index = breakArray(this.playList.length)
+        } else {
+          index = this.currentIndex - 1
+          if (index < 0) {
+            index = this.playList.length - 1
+          }
         }
         this.setCurrentIndex(index)
         if (!this.playing) {
@@ -243,9 +281,11 @@ export default {
     ...mapMutations({
       playHide: 'SHOW_PLAY',
       deletePlayList: 'DEL_PLAY_LIST',
-      clearAll: 'SET_PLAY_LIST',
+      setPlayList: 'SET_PLAY_LIST',
       setPlaying: 'SET_PLAYING',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setMode: 'SET_MODE',
+      setSequenceList: 'SET_SEQUENCE_LIST'
     })
   },
   computed: {
@@ -255,11 +295,18 @@ export default {
     playIcon () {
       return this.playing ? '#icon-suspend_icon' : '#icon-bofang'
     },
-    ...mapGetters(['showPlay', 'playList', 'currentIndex', 'currentSong', 'playing'])
+    modeIcon () {
+      return this.mode === 0 ? '#icon-xunhuanbofang' : this.mode === 1 ? '#icon-danquxunhuan' : '#icon-suijibofang'
+    },
+    modeDescription () {
+      return this.mode === 0 ? '顺序播放' : this.mode === 1 ? '循环播放' : '随机播放'
+    },
+    ...mapGetters(['showPlay', 'playList', 'currentIndex', 'currentSong', 'playing', 'sequenceList', 'mode'])
   },
   watch: {
     currentSong (newSong, oldSong) {
-      this.circleImg = newSong.song ? newSong.song.album.picUrl : newSong.album.picUrl
+      this.circleImg = newSong.al ? newSong.al.picUrl : newSong.song ? newSong.song.album.blurPicUrl : ''
+      this.nowPic = false
       const audio = this.$refs.audio
       if (!newSong.id) {
         return
@@ -308,6 +355,15 @@ export default {
 .fade-enter-active,.fade-leave-active{
   transition: all 0.5s;
 }
+.fade1-enter,.fade1-leave-to{
+  opacity: .2;
+}
+.fade1-enter-to,.fade1-leave{
+  opacity: 1;
+}
+.fade1-enter-active,.fade1-leave-active{
+  transition: all 1.5s;
+}
 .play-list-mask{
   background-color: rgba(145,145,145,0.2);
   position: fixed;
@@ -325,11 +381,17 @@ export default {
   background-color: #ffffff;
   overflow: hidden;
   .play-bg{
-    width: 300%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
     z-index: -1;
     opacity: 0.8;
-    filter: blur(30px);
+    -webkit-filter: blur(25px);
+    -moz-filter: blur(25px);
+    -ms-filter: blur(25px);
+    filter: blur(25px);
     img{
       width: 100%;
       height: 100%;
@@ -337,9 +399,8 @@ export default {
   }
   .mask{
     height: 100%;
-    background-color: #000;
-    opacity: 0.2;
     position: fixed;
+    background-color: rgba(35, 35, 35, 0.55);
     top: 0;
     bottom: 0;
   }
@@ -448,14 +509,17 @@ export default {
       border-bottom: 1px solid $border-bottom-gray;
       margin-left: 15px;
       position: relative;
-      padding-right: 20%;
+      padding-right: 15px;
       span{
         font-size: $font-size-sm;
         color: $play-list-gray-font;
       }
       i{
+        width: 10%;
+        height: 100%;
+        float: right;
         position: absolute;
-        right: 10px;
+        right: 0;
       }
     }
     .close{

@@ -2,8 +2,8 @@
   <transition name="slide">
     <div class="router-music-list">
       <top-title :titleName="titleName" @back="back"></top-title>
-    <!--  &lt;!&ndash;      // 吸顶播放&ndash;&gt;
-      <div v-show="playTopShow" class="play playTop" @click="playAll">
+      <!--      // 吸顶播放-->
+     <!-- <div v-show="playTopShow" class="play playTop" @click="playAll">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-bofang"></use>
         </svg>
@@ -67,7 +67,7 @@ export default {
   },
   mounted () {
     // 获取初始播放按钮距离顶部高度
-    // this.playTop = this.$refs.play.offsetTop + 1
+    // this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
     this._getPersonalizedDetail()
@@ -84,7 +84,7 @@ export default {
       // this.floatingCover(posY, this.playTop)
     },
     // 滑动吊顶
-    /*floatingCover (posY, offsetTop) {
+    /* floatingCover (posY, offsetTop) {
       if (-posY >= offsetTop) {
         this.playTopShow = true
       } else {
@@ -94,8 +94,8 @@ export default {
     _getPersonalizedDetail () {
       getPersonalizedDetail(this.musicList.id).then(res => {
         if (res.data.code === ERR_OK) {
-          this.songLists = res.data.result.tracks
-          this.trackCount = res.data.result.trackCount
+          this.songLists = res.data.playlist.tracks
+          this.trackCount = res.data.playlist.trackCount
         }
       })
     },

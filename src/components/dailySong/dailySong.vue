@@ -2,13 +2,13 @@
   <transition name="slide">
     <div class="router-music-list">
      <top-title @back="back"></top-title>
-    <!--  &lt;!&ndash;      // 吸顶播放&ndash;&gt;
+      <!--      // 吸顶播放-->
       <div v-show="playTopShow" class="play playTop" @click="playAll">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-bofang"></use>
         </svg>
         <span class="play-all">播放全部</span>
-      </div>-->
+      </div>
       <!--      头部背景-->
       <div class="bg-img" ref="bgImg">
         <div class="dim-bg" alt="" style="width: 100%;height: 100%;"></div>
@@ -26,7 +26,7 @@
           </div>
           <!--          歌曲列表-->
           <song-list :songLists="songLists">
-            <div v-show="!playTopShow" class="play" ref="play" @click="playAll">
+            <div v-show="!playTopShow" class="play" @click="playAll" ref="play">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-bofang"></use>
               </svg>
@@ -71,7 +71,7 @@ export default {
   mounted () {
     this._getDailySong()
     // 获取初始播放按钮距离顶部高度
-    // this.playTop = this.$refs.play.offsetTop + 1
+    // this.playTop = this.$refs.play.offsetTop - this.$refs.play.clientHeight
     // 获取头部虚化图片高度
     this.bgImgHeight = this.$refs.bgImg.clientHeight
     this.nowDate.day = new Date().getDate()
@@ -93,8 +93,8 @@ export default {
       posY >= 0 && (this.$refs.bgImg.style.height = (this.bgImgHeight + posY) + 'px')
       // this.floatingCover(posY, this.playTop)
     },
-    /* // 滑动吊顶
-    floatingCover (posY, offsetTop) {
+    // 滑动吊顶
+    /* floatingCover (posY, offsetTop) {
       if (-posY >= offsetTop) {
         this.playTopShow = true
       } else {
@@ -170,6 +170,7 @@ export default {
     background-color: #ffffff;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
+    position: relative;
     .play-all{
       font-size: $font-size-lg;
       font-weight: bold;

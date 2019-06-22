@@ -55,6 +55,14 @@ export function getRankListDetail () {
 }
 // 获取歌曲播放url
 export function getSongUrl (id) {
-  let url = Host + '/music/url?id=' + id
+  let url = Host + '/song/url?id=' + id
   return axios.get(url)
+}
+// 获取歌词
+export function getLyrics (songId) {
+  let params = {
+    id: songId
+  }
+  let url = Host + '/lyric'
+  return axios.get(url, { params: params })
 }

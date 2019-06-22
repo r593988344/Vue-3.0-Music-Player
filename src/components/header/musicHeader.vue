@@ -9,7 +9,8 @@
         </svg>
         <input class="search-input" type="text" placeholder="请输入要搜索的歌曲">
       </form>
-      <img v-show="!showPlay" src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
+      <img :class="{redBg: redBg}" v-show="!showPlay && playList.length && playing > 0" src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
+      <img v-show="!showPlay && playList.length > 0 && !playing" src="~common/image/staticMusic.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
     </div>
 </template>
 
@@ -17,6 +18,10 @@
 import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'musicHeader',
+  data () {
+    return {
+    }
+  },
   methods: {
     _showPlay () {
       this.showPlays(true)
@@ -27,8 +32,17 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'showPlay'
-    ])
+      'showPlay',
+      'playList',
+      'playing'
+    ]),
+    redBg () {
+      if (this.$route.path === '/musicDiscover/songListClassify') {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
@@ -41,6 +55,10 @@ export default {
   height: 50px;
   img{
     z-index: 9999;
+  }
+  .redBg{
+    background-color: #ff0000;
+    border-radius: 5px;
   }
   form{
     display: flex;
