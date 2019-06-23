@@ -4,19 +4,30 @@
       <top-title :titleName="currentSong.name" @back="back"></top-title>
       <div class="play-bg">
         <transition name="fade1" @after-leave="afterLeave">
-          <img v-show="nowPic" :src="circleImg" alt="" @load="loaded">
+          <img v-show="nowPic" :src="circleImg" alt="">
         </transition>
       </div>
       <div class="mask"></div>
       <div class="play-container">
-        <div class="container">
-          <div class="play-circle">
-            <img class="bg-img" :class="{rotation: !playing}" :src="circleImg">
-            <img class="bg-img" v-if="!circleImg" :class="{rotation: !playing}" src="~common/image/disc.png">
-          </div>
+        <div class="container" @click.stop="wordsControl">
+          <transition name="fade">
+            <div class="play-circle" v-show="!showWords">
+              <img class="bg-img" :class="{rotation: !playing}" :src="circleImg">
+              <img class="bg-img" v-if="!circleImg" :class="{rotation: !playing}" src="~common/image/disc.png">
+            </div>
+          </transition>
+          <transition name="fade">
+              <div class="song-words" :class="{showWord: !showWords}" @click.stop="wordsControl">
+                <scroll v-if="currentLyrics" :data="currentLyrics.lines" ref="lyricLists">
+                  <div ref="lyricLines">
+                    <p v-for="(words,index) of currentLyrics.lines" :key="index" :class="{currentLine: currentLineNumber === index}">{{words.txt}}</p>
+                  </div>
+                </scroll>
+              </div>
+          </transition>
         </div>
         <div class="player-control">
-          <div class="contain-bottom">
+          <div class="contain-bottom" :class="{showWord: showWords}">
             <div>
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-xihuan"></use>
@@ -121,6 +132,7 @@ import { getSongUrl, getLyrics } from 'common/api/discover'
 import { ERR_OK, playMode } from 'common/js/config'
 import { breakArray } from 'common/js/tool'
 import ProgressBar from 'baseComponent/progressBar/progressBar'
+import Lyric from 'lyric-parser'
 
 export default {
   name: 'playInterface',
@@ -138,22 +150,26 @@ export default {
       percent: 0,
       touching: false,
       circleImg: '',
-      nowPic: true
+      nowPic: true,
+      showWords: false,
+      currentLineNumber: 0,
+      currentLyrics: null
     }
   },
   mounted () {
     this.touching = false
   },
   methods: {
+    wordsControl () {
+      this.showWords = !this.showWords
+      console.log(this.showWords)
+    },
     changeMode () {
       const mode = (this.mode + 1) % 3
       this.setMode(mode)
     },
     afterLeave () {
       this.nowPic = true
-    },
-    loaded () {
-      // this.nowPic = true
     },
     firstPlay () {
       let audio = this.$refs.audio
@@ -178,6 +194,9 @@ export default {
     },
     timeUpdate (e) {
       if (!this.touching) {
+        if (this.currentLyrics) {
+          this.currentLyrics.seek((e.target.currentTime) * 1000)
+        }
         this.currentTime = e.target.currentTime
       }
     },
@@ -195,22 +214,42 @@ export default {
           if (!this.currentSongUrl) {
             this.nextSong()
           }
+          this._getLyrics(songId)
         }
-        console.log(this.$refs.audio)
       })
-      this._getLyrics(songId)
     },
     _getLyrics (id) {
       getLyrics(id).then(res => {
         if (res.data.code === ERR_OK) {
+          let currentLyric = res.data.lrc.lyric
+          if (this.currentLyrics) {
+            this.currentLyrics.stop()
+          }
+          this.currentLyrics = new Lyric(currentLyric, this.handleLyric)
+          if (this.playing) {
+            this.currentLyrics.play()
+          }
         }
       })
+    },
+    handleLyric ({ lineNum, txt }) {
+      console.log(lineNum)
+      this.currentLineNumber = lineNum
+      if (lineNum > 5) {
+        let line = this.$refs.lyricLines.children[lineNum - 4]
+        this.$refs.lyricLists.scrollToElement(line, 1000)
+      } else {
+        this.$refs.lyricLists.scrollTo(0, 0, 0)
+      }
     },
     togglePlaying () {
       const audio = this.$refs.audio
       if (this.playList.length > 0) {
         this.setPlaying(!this.playing)
         this.playing ? audio.play() : audio.pause()
+      }
+      if (this.currentLyrics) {
+        this.currentLyrics.togglePlay()
       }
     },
     ready () {
@@ -223,6 +262,9 @@ export default {
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+      if (this.currentLyrics) {
+        this.currentLyrics.seek(0)
+      }
     },
     nextSong () {
       let index = null
@@ -305,6 +347,9 @@ export default {
   },
   watch: {
     currentSong (newSong, oldSong) {
+      if (this.currentLyrics) {
+        this.currentLyrics.stop()
+      }
       this.circleImg = newSong.al ? newSong.al.picUrl : newSong.song ? newSong.song.album.blurPicUrl : ''
       this.nowPic = false
       const audio = this.$refs.audio
@@ -330,7 +375,7 @@ export default {
       }, 150)
       this.setPlaying(true)
     },
-    currentTime () {
+    currentTime (newTime) {
       this.percent = Math.floor(this.currentTime) / Math.floor(this.duration)
     }
   }
@@ -365,7 +410,7 @@ export default {
   transition: all 1.5s;
 }
 .play-list-mask{
-  background-color: rgba(145,145,145,0.2);
+  background-color: rgba(0, 0, 0, 0.32);
   position: fixed;
   top: 0;
   left: 0;
@@ -414,7 +459,8 @@ export default {
     height: calc(50% - 60px);
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding-bottom: 10%;
   }
   .container{
     margin-top: 60px;
@@ -423,6 +469,26 @@ export default {
     justify-content: center;
     align-items: center;
     position: relative;
+    .song-words{
+      font-size: $font-size-lg;
+      padding: 5px 10px;
+      height: calc(100% + 60px);
+      color: #ffffff;
+      line-height: 40px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      visibility: visible;
+      opacity: 1;
+      &.showWord{
+        visibility: hidden;
+        opacity: 0;
+        transition:all 0.3s linear;
+      }
+      .currentLine{
+        color: $background-r-color;
+      }
+    }
   }
   .contain-bottom{
     height: 60px;
@@ -431,6 +497,13 @@ export default {
     color: #ffffff;
     font-size: 24px;
     align-items: center;
+    visibility: visible;
+    opacity: 1;
+    &.showWord{
+      visibility: hidden;
+      opacity: 0;
+      transition:all 0.3s linear;
+    }
   }
   .play-circle{
     width: 70%;
