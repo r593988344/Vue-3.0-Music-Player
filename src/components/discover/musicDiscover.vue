@@ -129,12 +129,6 @@ export default {
     this._getBanner()
     this._getPersonalized()
   },
-  mounted () {
-    let m = document.querySelector('#discover')
-    m.addEventListener('touchmove', function (e) {
-      e.preventDefault()
-    }, { passive: false })
-  },
   methods: {
     _getBanner () {
       getBanner().then(res => {
