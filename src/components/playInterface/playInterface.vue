@@ -23,6 +23,7 @@
                     <p v-for="(words,index) of currentLyrics.lines" :key="index" :class="{currentLine: currentLineNumber === index}">{{words.txt}}</p>
                   </div>
                 </scroll>
+                <div v-if="!currentLyrics" class="no-words">{{noWords}}</div>
               </div>
           </transition>
         </div>
@@ -105,7 +106,7 @@
                     <use xlink:href="#icon-laba"></use>
                   </svg>
                   {{item.name}}
-                  <span v-for="(names, index) of item.ar" :key="index">-{{names.name}}</span>
+                  <span v-for="(names, index) of item.artists" :key="index">-{{names.name}}</span>
                   <i @click.stop="deleteSong(index)">
                     <svg class="icon cancel" aria-hidden="true">
                       <use xlink:href="#icon-cancel-1-copy"></use>
@@ -153,7 +154,8 @@ export default {
       nowPic: true,
       showWords: false,
       currentLineNumber: 0,
-      currentLyrics: null
+      currentLyrics: null,
+      noWords: '暂无歌词'
     }
   },
   mounted () {
@@ -356,7 +358,7 @@ export default {
       if (this.currentLyrics) {
         this.currentLyrics.stop()
       }
-      this.circleImg = newSong.al ? newSong.al.picUrl : newSong.song ? newSong.song.album.blurPicUrl : ''
+      this.circleImg = newSong.song ? newSong.song.album.picUrl : newSong.album.picUrl
       this.nowPic = false
       const audio = this.$refs.audio
       if (!newSong.id) {
@@ -383,7 +385,6 @@ export default {
     },
     showPlay (nowShow) {
       if (nowShow && this.showWords) {
-        console.log('show')
         let line = this.$refs.lyricLines.children[this.currentLineNumber - 4]
         this.$refs.lyricLists.scrollToElement(line, 0)
       }
@@ -486,13 +487,20 @@ export default {
       font-size: $font-size-lg;
       padding: 5px 10px;
       height: calc(100% + 60px);
-      color: #ffffff;
-      line-height: 40px;
+      color: $song-list-gray-font;
+      line-height: 30px;
       position: absolute;
       top: 0;
       left: 0;
+      .no-words{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
       .currentLine{
-        color: $background-r-color;
+        color: #ffffff;
       }
     }
   }

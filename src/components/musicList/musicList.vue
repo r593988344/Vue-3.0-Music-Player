@@ -168,13 +168,13 @@ export default {
       } else {
         getPersonalizedDetail(id).then(res => {
           if (res.data.code === ERR_OK) {
-            this.songLists = res.data.playlist.tracks
-            this.description = res.data.playlist.description
-            this.nickname = res.data.playlist.creator.nickname
-            this.avatarUrl = res.data.playlist.creator.avatarUrl
-            this.shareCount = res.data.playlist.shareCount
-            this.commentCount = res.data.playlist.commentCount
-            this.trackCount = res.data.playlist.trackCount
+            this.songLists = res.data.result.tracks
+            this.description = res.data.result.description
+            this.nickname = res.data.result.creator.nickname
+            this.avatarUrl = res.data.result.creator.avatarUrl
+            this.shareCount = res.data.result.shareCount
+            this.commentCount = res.data.result.commentCount
+            this.trackCount = res.data.result.trackCount
           }
         })
       }

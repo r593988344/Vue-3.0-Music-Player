@@ -14,7 +14,7 @@
           <slider v-if="banner.length">
             <div v-for="(item, i) in banner" :key="i">
               <a :href="item.url">
-                <img :src="item.imageUrl" alt="">
+                <img :src="item.picUrl" alt="">
               </a>
             </div>
           </slider>

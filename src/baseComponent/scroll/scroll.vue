@@ -54,12 +54,10 @@ export default {
       type: Number
     },
     bounce: {
-      default: {
-        top: true,
-        bottom: true,
-        left: true,
-        right: true
-      }
+      top: true,
+      bottom: true,
+      left: true,
+      right: true
     }
   },
   mounted () {
