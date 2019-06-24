@@ -10,14 +10,14 @@
       <div class="mask"></div>
       <div class="play-container">
         <div class="container" @click.stop="wordsControl">
-          <transition name="fade">
+          <transition name="fade2">
             <div class="play-circle" v-show="!showWords">
               <img class="bg-img" :class="{rotation: !playing}" :src="circleImg">
               <img class="bg-img" v-if="!circleImg" :class="{rotation: !playing}" src="~common/image/disc.png">
             </div>
           </transition>
-          <transition name="fade">
-              <div class="song-words" :class="{showWord: !showWords}" @click.stop="wordsControl">
+          <transition name="fade2">
+              <div class="song-words" v-show="showWords" @click.stop="wordsControl">
                 <scroll v-if="currentLyrics" :data="currentLyrics.lines" ref="lyricLists">
                   <div ref="lyricLines">
                     <p v-for="(words,index) of currentLyrics.lines" :key="index" :class="{currentLine: currentLineNumber === index}">{{words.txt}}</p>
@@ -162,7 +162,10 @@ export default {
   methods: {
     wordsControl () {
       this.showWords = !this.showWords
-      console.log(this.showWords)
+      if (this.showWords) {
+        let line = this.$refs.lyricLines.children[this.currentLineNumber - 4]
+        this.$refs.lyricLists.scrollToElement(line, 0)
+      }
     },
     changeMode () {
       const mode = (this.mode + 1) % 3
@@ -234,6 +237,9 @@ export default {
     },
     handleLyric ({ lineNum, txt }) {
       console.log(lineNum)
+      if (!this.showWords) {
+        return
+      }
       this.currentLineNumber = lineNum
       if (lineNum > 5) {
         let line = this.$refs.lyricLines.children[lineNum - 4]
@@ -375,6 +381,13 @@ export default {
       }, 150)
       this.setPlaying(true)
     },
+    showPlay (nowShow) {
+      if (nowShow && this.showWords) {
+        console.log('show')
+        let line = this.$refs.lyricLines.children[this.currentLineNumber - 4]
+        this.$refs.lyricLists.scrollToElement(line, 0)
+      }
+    },
     currentTime (newTime) {
       this.percent = Math.floor(this.currentTime) / Math.floor(this.duration)
     }
@@ -400,14 +413,14 @@ export default {
 .fade-enter-active,.fade-leave-active{
   transition: all 0.5s;
 }
-.fade1-enter,.fade1-leave-to{
-  opacity: .2;
+.fade2-enter,.fade-leave-to{
+  opacity: 0;
 }
-.fade1-enter-to,.fade1-leave{
+.fade2-enter-to,.fade-leave{
   opacity: 1;
 }
-.fade1-enter-active,.fade1-leave-active{
-  transition: all 1.5s;
+.fade2-enter-active,.fade-leave-active{
+  transition: all 1s;
 }
 .play-list-mask{
   background-color: rgba(0, 0, 0, 0.32);
@@ -478,13 +491,6 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      visibility: visible;
-      opacity: 1;
-      &.showWord{
-        visibility: hidden;
-        opacity: 0;
-        transition:all 0.3s linear;
-      }
       .currentLine{
         color: $background-r-color;
       }
