@@ -52,6 +52,14 @@ export default {
     },
     scrollToSong: {
       type: Number
+    },
+    bounce: {
+      default: {
+        top: true,
+        bottom: true,
+        left: true,
+        right: true
+      }
     }
   },
   mounted () {
@@ -73,7 +81,8 @@ export default {
         probeType: this.probeType,
         click: this.click,
         scrollX: this.scrollX,
-        pullUpLoad: this.pullUpLoad
+        pullUpLoad: this.pullUpLoad,
+        bounce: this.bounce
       })
 
       if (this.listenScroll) {

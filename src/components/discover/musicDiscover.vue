@@ -4,6 +4,7 @@
     <scroll
       class="scroll-contain"
       :click="click"
+      :bounce="bounce"
       :data="personalized">
       <div>
         <!--顶部红色背景-->
@@ -111,7 +112,13 @@ export default {
       // 推荐歌单
       personalized: [],
       click: true,
-      songPath: ''
+      songPath: '',
+      bounce: {
+        top: false,
+        bottom: true,
+        left: true,
+        right: true
+      }
     }
   },
   created () {
@@ -121,6 +128,12 @@ export default {
     }
     this._getBanner()
     this._getPersonalized()
+  },
+  mounted () {
+    let m = document.querySelector('#discover')
+    m.addEventListener('touchmove', function (e) {
+      e.preventDefault()
+    }, { passive: false })
   },
   methods: {
     _getBanner () {
