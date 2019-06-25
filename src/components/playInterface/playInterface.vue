@@ -3,7 +3,7 @@
     <div v-show="showPlay" class="play-song" @touchstart.once="firstPlay">
       <top-title :titleName="currentSong.name" @back="back"></top-title>
       <div class="play-bg">
-        <transition name="fade1" @after-leave="afterLeave">
+        <transition name="fade" @after-leave="afterLeave">
           <img v-show="nowPic" :src="circleImg" alt="">
         </transition>
       </div>
@@ -164,7 +164,7 @@ export default {
   methods: {
     wordsControl () {
       this.showWords = !this.showWords
-      if (this.showWords) {
+      if (this.showWords && this.currentLyrics) {
         let line = this.$refs.lyricLines.children[this.currentLineNumber - 4]
         this.$refs.lyricLists.scrollToElement(line, 0)
       }

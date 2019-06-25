@@ -17,7 +17,7 @@
       </div>
       <!--       滚动区域-->
       <scroll class="song-list-scroll"
-              :data="songLists"
+              :data="tracks"
               @scroll="scroll"
               :listen-scroll="listenScroll"
               :probeType="probeType">
@@ -71,7 +71,7 @@
             </div>
           </div>
           <!--          歌曲列表-->
-          <song-list :songLists="songLists">
+          <song-list :songLists="tracks">
             <div v-show="!playTopShow" class="play" ref="play" @click="playAll">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-bofang"></use>
@@ -101,7 +101,7 @@ export default {
   data () {
     return {
       // 歌曲列表数据
-      songLists: [],
+      tracks: [],
       // 专辑描述
       description: '',
       // 专辑小图标
@@ -162,26 +162,29 @@ export default {
       if (this.$route.params.id === 'dailySong') {
         getDailySong().then(res => {
           if (res.data.code === ERR_OK) {
-            this.songLists = res.data.result
+            this.tracks = res.data.result
           }
         })
       } else {
         getPersonalizedDetail(id).then(res => {
+          let data = res.data.result
           if (res.data.code === ERR_OK) {
-            this.songLists = res.data.result.tracks
-            this.description = res.data.result.description
-            this.nickname = res.data.result.creator.nickname
-            this.avatarUrl = res.data.result.creator.avatarUrl
-            this.shareCount = res.data.result.shareCount
-            this.commentCount = res.data.result.commentCount
-            this.trackCount = res.data.result.trackCount
+            let { tracks, description, creator, shareCount, commentCount, trackCount } = data
+            this.tracks = tracks
+            this.description = description
+            this.creator = creator
+            this.shareCount = shareCount
+            this.commentCount = commentCount
+            this.trackCount = trackCount
+            this.nickname = creator.nickname
+            this.avatarUrl = creator.avatarUrl
           }
         })
       }
     },
     playAll () {
-      if (this.songLists.length > 0) {
-        this.selectPlay({ list: this.songLists, index: 0 })
+      if (this.tracks.length > 0) {
+        this.selectPlay({ list: this.tracks, index: 0 })
       }
     },
     ...mapActions([
