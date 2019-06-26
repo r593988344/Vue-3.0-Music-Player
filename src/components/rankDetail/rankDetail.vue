@@ -94,8 +94,8 @@ export default {
     _getPersonalizedDetail () {
       getPersonalizedDetail(this.musicList.id).then(res => {
         if (res.data.code === ERR_OK) {
-          this.songLists = res.data.playlist.tracks
-          this.trackCount = res.data.playlist.trackCount
+          this.songLists = res.data.result.tracks
+          this.trackCount = res.data.result.trackCount
         }
       })
     },
