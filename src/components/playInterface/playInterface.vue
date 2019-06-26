@@ -276,6 +276,9 @@ export default {
     },
     nextSong () {
       let index = null
+      if (!this.songReady) {
+        return
+      }
       if (this.playList.length === 1 || this.mode === playMode.loop) {
         this.loop()
         return
@@ -297,6 +300,9 @@ export default {
     },
     preSong () {
       let index = null
+      if (!this.songReady) {
+        return
+      }
       if (this.playList.length === 1 || this.mode === playMode.loop) {
         this.loop()
         return
