@@ -7,7 +7,9 @@
         <svg class="icon icon-search" aria-hidden="true">
           <use xlink:href="#icon-sousuo"></use>
         </svg>
-        <input class="search-input" type="text" placeholder="请输入要搜索的歌曲">
+        <throttle>
+          <input class="search-input" type="text" placeholder="请输入要搜索的歌曲" @input="inputs">
+        </throttle>
       </form>
       <img :class="{redBg: redBg}" v-show="!showPlay && playList.length && playing > 0" src="~common/image/music.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
       <img v-show="!showPlay && playList.length > 0 && !playing" src="~common/image/staticMusic.svg" alt="" style="width: 30px;height: 30px;" @click="_showPlay">
@@ -16,8 +18,11 @@
 
 <script>
 import { mapMutations, mapGetters } from 'vuex'
+import Debounce from 'common/js/debounce'
+import Throttle from 'common/js/throttle'
 export default {
   name: 'musicHeader',
+  components: { Throttle, Debounce },
   data () {
     return {
     }
@@ -25,6 +30,9 @@ export default {
   methods: {
     _showPlay () {
       this.showPlays(true)
+    },
+    inputs () {
+      console.log('click')
     },
     ...mapMutations({
       showPlays: 'SHOW_PLAY'
