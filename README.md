@@ -21,5 +21,9 @@ https://github.com/Binaryify/NeteaseCloudMusicApi
 
 ## 部分页面截图
 
-
+![主页面](https://github.com/r593988344/Vue-3.0-Music-Player/blob/master/static/view/discover.jpg)
+![播放页](https://github.com/r593988344/Vue-3.0-Music-Player/blob/master/static/view/playing.jpg)
+![排行榜](https://github.com/r593988344/Vue-3.0-Music-Player/blob/master/static/view/rank.jpg)
+![歌单](https://github.com/r593988344/Vue-3.0-Music-Player/blob/master/static/view/songList.jpg)
+![歌曲列表](https://github.com/r593988344/Vue-3.0-Music-Player/blob/master/static/view/songLists.jpg)
 
