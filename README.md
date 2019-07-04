@@ -1,7 +1,4 @@
-# music-player
-
-> 
-
+# 仿网易云音乐播放器
 ## Build Setup
 
 ``` bash
@@ -17,17 +14,12 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
 ## 后台github代码
 网易云音乐API：
 https://github.com/Binaryify/NeteaseCloudMusicApi
+
+## 部分页面截图
+
 
 

@@ -1,6 +1,6 @@
 /**
  *
- * @param fun   需要节流执行的方法
+ * @param fun   需要防抖执行的方法
  * @param timeout   延时
  * @param before   在执行绑定方法前需要做的事
  * @returns {Function}
