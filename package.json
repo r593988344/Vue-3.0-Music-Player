@@ -6,6 +6,9 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "deploy:setup": "pm2 deploy production setup",
+    "deploy:update": "pm2 deploy production update",
+    "docker": "docker-compose -f docker/docker-compose.yml up",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js"
