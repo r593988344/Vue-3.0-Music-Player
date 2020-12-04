@@ -1,13 +1,18 @@
 version: '2.0'
 
 services:
+  node:
+    image: node:12.13.0
+    working_dir: /home/node/app
+    volumes:
+      - ../../Vue-3.0-Music-Player:/home/node/app
+#      - /home/node/app/node_modules
+    command: /bin/bash -c "npm install yarn -g && yarn install && yarn build"
   nginx:
     restart: always
     image: nginx:1.19.5-alpine
     ports:
       - 8080:80
     volumes:
-#      - ./conf.d:/etc/nginx/conf.d
       - ./log:/var/log/nginx
-#      - ./www:/var/www
       - ../dist:/usr/share/nginx/html
