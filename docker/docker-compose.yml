@@ -5,7 +5,7 @@ services:
     image: node:12.13.0
     working_dir: /home/node/app
     volumes:
-      - ../../Vue-3.0-Music-Player:/home/node/app
+      - ../../source:/home/node/app
 #      - /home/node/app/node_modules
     command: /bin/bash -c "npm install yarn -g && yarn install && yarn build"
   nginx:
