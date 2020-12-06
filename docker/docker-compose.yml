@@ -12,7 +12,7 @@ services:
     restart: always
     image: nginx:1.19.5-alpine
     ports:
-      - 8080:80
+      - 8001:80
     volumes:
       - ./log:/var/log/nginx
       - ../dist:/usr/share/nginx/html

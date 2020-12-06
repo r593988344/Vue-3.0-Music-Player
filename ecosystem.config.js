@@ -8,7 +8,7 @@ module.exports = {
       ref: 'origin/master', // 仓库分支
       repo: 'https://github.com/r593988344/Vue-3.0-Music-Player.git', // 仓库代码地址
       path: '/root/home/music-player', // 服务器拉取代码存放路径
-      'post-deploy': 'bash docker/build.sh', // 在服务端进行打包部署
+      'post-deploy': 'music bash docker/build.sh', // 在服务端进行打包部署
     },
   },
 };
